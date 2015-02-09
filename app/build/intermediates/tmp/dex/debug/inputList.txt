@@ -1,5 +1,0 @@
-/Users/namrataprabhu/Dropbox/AndroidProjects/FinalProjectIMO/app/build/intermediates/classes/debug
-/Users/namrataprabhu/Dropbox/AndroidProjects/FinalProjectIMO/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.2-b632a856fe48b5803e94a8f6f78b8ca620d10b92.jar
-/Users/namrataprabhu/Dropbox/AndroidProjects/FinalProjectIMO/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.2-33d05948a935157cb6fa705e18eb632bb8387dbd.jar
-/Users/namrataprabhu/Dropbox/AndroidProjects/FinalProjectIMO/app/build/intermediates/pre-dexed/debug/classes-e95fe96312a73f8cc84117b1b60d02c03a911c6f.jar
-/Users/namrataprabhu/Dropbox/AndroidProjects/FinalProjectIMO/app/build/intermediates/pre-dexed/debug/classes-d5bc989859f643efca1ad031f75ad615ceea40e3.jar
