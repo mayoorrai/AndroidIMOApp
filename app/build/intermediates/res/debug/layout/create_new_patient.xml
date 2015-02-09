@@ -260,4 +260,4 @@
             android:layout_alignRight="@id/notesPanel"/>
 
     </RelativeLayout>
-</ScrollView><!-- From: file:/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/src/main/res/layout/create_new_patient.xml -->
+</ScrollView><!-- From: file:/Users/namrataprabhu/Dropbox/AndroidProjects/FinalProjectIMO/app/src/main/res/layout/create_new_patient.xml -->
