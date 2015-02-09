@@ -8,7 +8,7 @@ public class Patient {
     String firstName; //patient's first name
     String lastName; //the patient's last name
     int age; //the patient's age
-    //enum to set the gender of the patient
+
     public enum Gender {
         Male(0),
         Female(1),
