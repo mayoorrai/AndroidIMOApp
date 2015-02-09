@@ -1,0 +1,244 @@
+package com.imoandroid.imoandroidapp;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+
+public class PatientListActivity extends Activity {
+    retrievePatientData thing;
+    public List<Patient> patientList = new ArrayList<Patient>();
+    public ListView lvPatient;
+    public Button addPatient;
+    public final String TAG = PatientListActivity.class.getSimpleName();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Log.v(TAG, "Hello");
+        // Connect to URL
+        if (isNetworkAvailable()) {
+            thing = new retrievePatientData();
+            thing.execute();
+        }
+        else {
+            Toast.makeText(this, "Network Unavailable!",  Toast.LENGTH_LONG).show();
+        }
+        setContentView(R.layout.activity_patient_list);
+        lvPatient = (ListView) findViewById(R.id.patientListView);
+        addPatient = (Button) findViewById(R.id.buttonAddNewPatient);
+        addPatient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                patientClickHandler(null);
+            }
+        });
+    }
+
+    public void toastTheThing(String thing)
+    {
+
+        Toast.makeText(this, thing,  Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_patient_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void populatePatientList() {
+        DisplayPatientAdapter listAdapter = new DisplayPatientAdapter(this, R.layout.activity_patient_holder, (ArrayList<Patient>) patientList);
+        lvPatient.setAdapter(listAdapter);
+        lvPatient.setOnItemClickListener(new OnPatientClick());
+    }
+
+    public void patientClickHandler(Patient p) {
+        if (p == null) {
+            // new patient (empty fields)
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("create", true);
+            startActivity(intent);
+        }
+        else {
+            // update patient (nonempty fields)
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra(Constants.TAG_FIRST_NAME, p.getFirstName());
+            intent.putExtra(Constants.TAG_LAST_NAME, p.getLastName());
+            intent.putExtra(Constants.TAG_GENDER, p.get_gender());
+            intent.putExtra(Constants.TAG_DOB, p.getDOB().getTime());
+            intent.putExtra(Constants.TAG_ADDRESS1, p.address.getAddress1());
+            intent.putExtra(Constants.TAG_ADDRESS2, p.address.getAddress2());
+            intent.putExtra(Constants.TAG_ADDRESS2, p.address.getAddress2());
+            intent.putExtra(Constants.TAG_CITY, p.address.getCity());
+            intent.putExtra(Constants.TAG_LANGUAGE, p.getLanguage());
+            intent.putExtra(Constants.TAG_STATE, p.address.getState());
+            intent.putExtra(Constants.TAG_MOBILE, p.address.getMobilePhone());
+            intent.putExtra(Constants.TAG_HOME, p.address.getHomePhone());
+            intent.putExtra(Constants.TAG_OFFICE, p.address.getOfficePhone());
+            intent.putExtra(Constants.TAG_NOTES, p.getNotes());
+            intent.putExtra("create", false);
+            startActivity(intent);
+        }
+    }
+
+
+    // HTTP and JSON Logic
+    private class retrievePatientData extends AsyncTask<Object, Void, JSONArray> {
+        @Override
+        protected JSONArray doInBackground(Object... params) {
+            int responseCode = -1;
+            char[] inputBuffer = new char[256];
+            JSONArray jsonPatientArray = null;
+
+            try {
+                URL patientsURL = new URL("http://noteworthy.web.engr.illinois.edu/patient1.json");
+                HttpURLConnection connection = (HttpURLConnection) patientsURL.openConnection();
+                connection.connect();
+
+                responseCode = connection.getResponseCode();
+                // if responseCode == 200, download data
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    InputStream inputStream = connection.getInputStream();
+
+                    String responseData = slurp(inputStream, inputBuffer);
+                    Log.i(TAG, responseData);
+                    jsonPatientArray = new JSONArray(responseData);
+
+
+                    // Fill patientsList
+                    for (int i = 0; i < jsonPatientArray.length(); i++) {
+                        JSONObject o = jsonPatientArray.getJSONObject(i);
+                        JSONObject jsonAddressDeets = o.getJSONObject(Constants.TAG_ADDRESS);
+
+                        Patient curr = new Patient();
+                        curr.setFirstName(o.getString(Constants.TAG_FIRST_NAME));
+                        curr.setLastName(o.getString(Constants.TAG_LAST_NAME));
+                        curr.setDOB(new Date(o.getLong(Constants.TAG_DOB)));
+                        String g = o.getString(Constants.TAG_GENDER);
+                        if (g.equals("m")) {
+                            curr.set_gender(Patient.Gender.Male);
+                        }
+                        else if (g.equals("f")) {
+                            curr.set_gender(Patient.Gender.Female);
+                        }
+                        else {
+                            curr.set_gender(Patient.Gender.Other);
+                        }
+                        curr.setLanguage(o.getString(Constants.TAG_LANGUAGE));
+                        curr.setNotes(o.getString(Constants.TAG_NOTES));
+                        // New Address Object
+                        PatientAddress currPatientAddress = new PatientAddress();
+                        // JSON: Address Details
+                        currPatientAddress.setAddress1(jsonAddressDeets.getString(Constants.TAG_ADDRESS1));
+                        currPatientAddress.setAddress2(jsonAddressDeets.getString(Constants.TAG_ADDRESS2));
+                        currPatientAddress.setCity(jsonAddressDeets.getString(Constants.TAG_CITY));
+                        currPatientAddress.setZip(jsonAddressDeets.getInt(Constants.TAG_ZIP));
+                        currPatientAddress.setMobilePhone(jsonAddressDeets.getLong(Constants.TAG_MOBILE));
+                        currPatientAddress.setHomePhone(jsonAddressDeets.getLong(Constants.TAG_HOME));
+                        currPatientAddress.setOfficePhone(jsonAddressDeets.getLong(Constants.TAG_OFFICE));
+                        currPatientAddress.setState(State.valueOf(jsonAddressDeets.getString(Constants.TAG_STATE).toUpperCase()));
+                        curr.setAddress(currPatientAddress);
+                        Log.i("Test", curr.getFirstName());
+
+                        // Add curr to List
+                        patientList.add(curr);
+                    }
+
+                } else {
+                    Log.i(TAG, "Unsuccessful HTTP Response Code: " + responseCode);
+                }
+            } catch (MalformedURLException e) {
+                Log.e(TAG, "Exception caught: ", e);
+            } catch (IOException e) {
+                Log.e(TAG, "Exception caught: ", e);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception caught: ", e);
+            }
+            return null;
+        }
+
+        protected void onPostExecute(JSONArray result) {
+           // toastTheThing(patientList.get(0).firstName);
+            populatePatientList();
+        }
+
+        protected String slurp(InputStream is, char[] buffer) throws IOException {
+            StringBuilder out = new StringBuilder();
+            Reader in = null;
+            try {
+                in = new InputStreamReader(is, "UTF-8");
+                for (;;) {
+                    int rsz = in.read(buffer, 0, buffer.length);
+                    if (rsz < 0) {
+                        break;
+                    }
+                    out.append(buffer, 0, rsz);
+                }
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
+                in = null;
+            }
+            return out.toString();
+        }
+    }
+
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+        return isAvailable;
+    }
+
+
+}

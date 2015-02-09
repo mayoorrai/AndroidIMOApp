@@ -1,0 +1,25 @@
+package com.imoandroid.imoandroidapp;
+
+/**
+ * Created by mayoorrai on 2/8/15.
+ */
+public class Constants {
+    public static final String TAG_FIRST_NAME = "first_name";
+    public static final String TAG_LAST_NAME = "last_name";
+    public static final String TAG_DOB = "dob";
+    public static final String TAG_GENDER = "gender";
+    public static final String TAG_LANGUAGE = "language";
+    public static final String TAG_PICTURE = "picture";
+    public static final String TAG_INSURANCE_CODE = "code";
+    public static final String TAG_INSURANCE_NAME = "name";
+    public static final String TAG_ADDRESS = "address";
+    public static final String TAG_ADDRESS1 = "address1";
+    public static final String TAG_ADDRESS2 = "address2";
+    public static final String TAG_CITY = "city";
+    public static final String TAG_STATE = "state";
+    public static final String TAG_ZIP = "zip";
+    public static final String TAG_MOBILE = "mobile";
+    public static final String TAG_HOME = "home";
+    public static final String TAG_OFFICE = "office";
+    public static final String TAG_NOTES = "notes";
+}

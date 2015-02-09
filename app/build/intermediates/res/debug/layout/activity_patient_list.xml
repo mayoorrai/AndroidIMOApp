@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.imoandroid.imoandroidapp.PatientListActivity">
+
+    <View
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/cyan">
+        </View>
+
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/header_all_patients"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_alignStart="@id/header"
+        android:layout_alignLeft="@id/header"
+        android:clickable="false"/>
+
+    <Button
+        android:id="@+id/buttonAddNewPatient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Patient"
+        android:src="@drawable/plus"
+        android:layout_alignEnd="@id/header"
+        android:layout_alignRight="@id/header"
+        />
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/header"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="#00FFFF"-->
+        <!--android:orientation="horizontal">-->
+
+        <!---->
+
+        <!--</LinearLayout>-->
+
+    <ListView
+        android:id="@+id/patientListView"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_below="@id/headerText"/>
+
+</RelativeLayout>
+<!-- From: file:/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/src/main/res/layout/activity_patient_list.xml -->
