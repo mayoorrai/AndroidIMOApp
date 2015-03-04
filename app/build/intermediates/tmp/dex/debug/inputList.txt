@@ -1,5 +1,0 @@
-/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/build/intermediates/classes/debug
-/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.2-27ef0ebede4fd240d26659daa9bd7e5c43622e8e.jar
-/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.2-ffd23852cc4b5aace11aa6d54260af42baf9dc1f.jar
-/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/build/intermediates/pre-dexed/debug/classes-82976ee04e9da69898f00f42c381c8a76d6bbab4.jar
-/Users/mayoorrai/AndroidStudioProjects/IMOAndroidApp/app/build/intermediates/pre-dexed/debug/classes-b346e316102586223973a26f4b1c37ddd3924857.jar

@@ -5,9 +5,10 @@ import java.util.Date;
 public class Patient {
 
     // Basic Patient Details
-    String firstName;
-    String lastName;
-    int age;
+    String firstName; //patient's first name
+    String lastName; //the patient's last name
+    int age; //the patient's age
+
     public enum Gender {
         Male(0),
         Female(1),
