@@ -97,4 +97,8 @@ public class Patient {
     public void setDOB(Date DOB) {
         this.DOB = DOB;
     }
+
+    public String getFullName() {
+        return this.getFirstName() + " " + this.getLastName();
+    }
 }

@@ -33,7 +33,7 @@ public class DisplayPatientAdapter extends ArrayAdapter<Patient> {
         if (child == null) {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             child = inflater.inflate(layoutResourceID, parent, false);
-            pat = (TextView) child.findViewById(R.id.tvPatient);
+            pat = (TextView) child.findViewById(R.id.title);
             child.setTag(pat);
         }
         else {

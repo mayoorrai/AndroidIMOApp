@@ -1,16 +1,23 @@
 package com.imoandroid.imoandroidapp;
+import com.imoandroid.imoandroidapp.model.*;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -33,9 +40,28 @@ import java.util.List;
 public class PatientListActivity extends Activity {
     retrievePatientData thing;
     public List<Patient> patientList = new ArrayList<Patient>();
-    public ListView lvPatient;
+    public ListView mDrawerList;
     public Button addPatient;
     public final String TAG = PatientListActivity.class.getSimpleName();
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    /**
+     *     Navbar logic
+      */
+    private DrawerLayout mDrawerLayout;
+
+    // nav drawer title
+    private CharSequence mDrawerTitle;
+
+    // used to store app title
+    private CharSequence mTitle;
+
+    // slide menu items
+    public ArrayList<String> navDrawerPatientNames;
+    private TypedArray navMenuIcons;
+
+    private ArrayList<NavDrawerItem> navDrawerPatients;
+   // private NavDrawerListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +76,99 @@ public class PatientListActivity extends Activity {
         else {
             Toast.makeText(this, "Network Unavailable!",  Toast.LENGTH_LONG).show();
         }
+
         setContentView(R.layout.activity_patient_list);
-        lvPatient = (ListView) findViewById(R.id.patientListView);
-        addPatient = (Button) findViewById(R.id.buttonAddNewPatient);
-        addPatient.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                patientClickHandler(null);
+        mTitle = "All Patients";
+        mDrawerTitle = getTitle();
+
+        SystemClock.sleep(10000);
+        // load slide menu items (with patient names)
+        Log.v(TAG, "Entering getPatientNames()...");
+        getPatientNames();
+        Log.v(TAG, "Length: " + navDrawerPatientNames.size());
+
+        // initialize drawer layouts
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.patientListView);
+        Log.v(TAG, "----" + mDrawerList);
+        navDrawerPatients = new ArrayList<NavDrawerItem>();
+
+        populatePatientList();
+
+        // Populate navDrawer with patient names
+        for (int i = 0; i < patientList.size(); i++) {
+            navDrawerPatients.add(new NavDrawerItem(patientList.get(i)));
+        }
+
+        // enabling action bar app icon and behaving it as toggle button
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setHomeButtonEnabled(true);
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.string.app_name, // nav drawer open - description for accessibility
+                R.string.app_name // nav drawer close - description for accessibility
+        ) {
+            public void onDrawerClosed(View view) {
+                getActionBar().setTitle(mTitle);
+                // calling onPrepareOptionsMenu() to show action bar icons
+                invalidateOptionsMenu();
             }
-        });
+
+            public void onDrawerOpened(View drawerView) {
+                getActionBar().setTitle(mDrawerTitle);
+                // calling onPrepareOptionsMenu() to hide action bar icons
+                invalidateOptionsMenu();
+            }
+        };
+
+
+       // addPatient = (Button) findViewById(R.id.buttonAddNewPatient);
+//        addPatient.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                patientClickHandler(null);
+//            }
+//        });
+    }
+
+
+    /* *
+     * Called when invalidateOptionsMenu() is triggered
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // if nav drawer is opened, hide the action items
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getActionBar().setTitle(mTitle);
+    }
+
+//    @Override
+//    protected void onPostCreate(Bundle savedInstanceState) {
+//        super.onPostCreate(savedInstanceState);
+//        // Sync the toggle state after onRestoreInstanceState has occurred.
+//        mDrawerToggle.syncState();
+//    }
+//
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        // Pass any configuration change to the drawer toggle
+//        mDrawerToggle.onConfigurationChanged(newConfig);
+//    }
+
+
+    private void getPatientNames() {
+        navDrawerPatientNames = new ArrayList<String>();
+        for (int i = 0; i < patientList.size(); i++) {
+            navDrawerPatientNames.add(patientList.get(i).getFullName());
+        }
     }
 
     public void toastTheThing(String thing)
@@ -89,10 +199,10 @@ public class PatientListActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void populatePatientList() {
+    public void populatePatientList() {
         DisplayPatientAdapter listAdapter = new DisplayPatientAdapter(this, R.layout.activity_patient_holder, (ArrayList<Patient>) patientList);
-        lvPatient.setAdapter(listAdapter);
-        lvPatient.setOnItemClickListener(new OnPatientClick());
+        mDrawerList.setAdapter(listAdapter);
+        mDrawerList.setOnItemClickListener(new OnPatientClick());
     }
 
     public void patientClickHandler(Patient p) {
@@ -123,6 +233,8 @@ public class PatientListActivity extends Activity {
             startActivity(intent);
         }
     }
+
+
 
 
     // HTTP and JSON Logic

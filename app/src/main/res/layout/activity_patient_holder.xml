@@ -7,8 +7,13 @@
     tools:context="com.imoandroid.imoandroidapp.PatientListActivity">
 
     <TextView
-        android:id="@+id/tvPatient"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="@color/list_item_title"
+        android:gravity="center_vertical"
+        android:paddingRight="40dp"/>
 
 </RelativeLayout>

@@ -12,9 +12,8 @@ public class OnPatientClick implements AdapterView.OnItemClickListener{
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final Context context = view.getContext();
-        TextView patientDetails = (TextView) view.findViewById(R.id.tvPatient);
+        TextView patientDetails = (TextView) view.findViewById(R.id.title);
         Patient pat = (Patient) patientDetails.getTag();
         ((PatientListActivity) context).patientClickHandler(pat);
-
     }
 }
