@@ -210,12 +210,12 @@ public class PatientInputForm extends ActionBarActivity {
 
         //Verify Basic Details: EditTexts
         boolean basicFields = checkIfFilled(etfirstName, error);
-        basicFields = basicFields && checkIfFilled(etlastName, error);
-        basicFields = basicFields && checkIfFilled(etaddress1, error);
-        basicFields = basicFields && checkIfFilled(etcity, error);
-        basicFields = basicFields && checkIfFilled(etlanguage, error);
-        basicFields = basicFields && checkIfFilled(etstate, error);
-        basicFields = basicFields && checkIfFilled(etzip, error);
+        basicFields = checkIfFilled(etlastName, error) && basicFields;
+        basicFields = checkIfFilled(etaddress1, error) && basicFields;
+        basicFields = checkIfFilled(etcity, error) && basicFields;
+        basicFields = checkIfFilled(etlanguage, error) && basicFields;
+        basicFields = checkIfFilled(etstate, error) && basicFields;
+        basicFields = checkIfFilled(etzip, error) && basicFields;
 
         boolean ageSet = ageInt >= 0;
         if(!ageSet)
@@ -252,9 +252,12 @@ public class PatientInputForm extends ActionBarActivity {
                 address.put("city", etcity.getText().toString());
                 address.put("state", etstate.getText().toString());
                 address.put("zip", Integer.parseInt(etzip.getText().toString()));
-                address.put("mobile", Long.parseLong(etmobile.getText().toString()));
-                address.put("home", Long.parseLong(ethome.getText().toString()));
-                address.put("office", Long.parseLong(etoffice.getText().toString()));
+                String num = etmobile.getText().toString();
+                address.put("mobile", num.isEmpty()? null : Long.parseLong(num));
+                num = ethome.getText().toString();
+                address.put("home", num.isEmpty()? null : Long.parseLong(num));
+                num = etoffice.getText().toString();
+                address.put("office", num.isEmpty()? null : Long.parseLong(num));
 
                 patient.put("address", address);
                 patient.put("notes", etnotes.getText().toString());
