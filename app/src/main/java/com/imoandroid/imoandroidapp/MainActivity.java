@@ -188,7 +188,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
     public void assignFields() {
          etfirstName = (EditText)findViewById(R.id.firstNameBox);
-         etlastName = (EditText)findViewById(R.id.lastNameBox);;
+         etlastName = (EditText)findViewById(R.id.lastNameBox);
          etlanguage = (EditText)findViewById(R.id.languageBox);
          etgender = (Spinner)findViewById(R.id.genderSpinner);
          etdob = (DatePicker)findViewById(R.id.dobBox);
