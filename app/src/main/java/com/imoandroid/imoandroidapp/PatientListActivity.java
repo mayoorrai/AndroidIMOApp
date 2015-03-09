@@ -225,16 +225,16 @@ public class PatientListActivity extends Activity{
     public void patientClickHandler(Patient p) {
         if (p == null) {
             // new patient (empty fields)
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PatientInputForm.class);
             intent.putExtra("create", true);
             startActivity(intent);
         }
         else {
             // update patient (nonempty fields)
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PatientInputForm.class);
             intent.putExtra(Constants.TAG_FIRST_NAME, p.getFirstName());
             intent.putExtra(Constants.TAG_LAST_NAME, p.getLastName());
-            intent.putExtra(Constants.TAG_GENDER, p.get_gender());
+            intent.putExtra(Constants.TAG_GENDER, p.get_gender().getNum());
             intent.putExtra(Constants.TAG_DOB, p.getDOB().getTime());
             intent.putExtra(Constants.TAG_ADDRESS1, p.address.getAddress1());
             intent.putExtra(Constants.TAG_ADDRESS2, p.address.getAddress2());
