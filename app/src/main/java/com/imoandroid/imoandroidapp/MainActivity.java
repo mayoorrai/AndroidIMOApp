@@ -131,10 +131,39 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_patient_nav_drawer)
+        if (id == R.id.action_patient_add)
         {
             Intent mainIntent = new Intent(this,PatientInputForm.class);
+            mainIntent.putExtra("create", true);
             this.startActivity(mainIntent);
+
+        }
+        if(id == R.id.action_patient_edit)
+        {
+            Intent prevIntent = getIntent();
+            Intent intent = new Intent(this,PatientInputForm.class);
+            if(prevIntent.getBooleanExtra("create", true) == false)
+            {
+                intent.putExtra(Constants.TAG_FIRST_NAME, prevIntent.getStringExtra(Constants.TAG_FIRST_NAME));
+                intent.putExtra(Constants.TAG_LAST_NAME, prevIntent.getStringExtra(Constants.TAG_LAST_NAME));
+                intent.putExtra(Constants.TAG_GENDER, prevIntent.getIntExtra(Constants.TAG_GENDER, 2));
+                intent.putExtra(Constants.TAG_DOB, prevIntent.getStringExtra((Constants.TAG_FIRST_NAME)));
+                intent.putExtra(Constants.TAG_LANGUAGE, prevIntent.getStringExtra(Constants.TAG_LANGUAGE));
+                intent.putExtra(Constants.TAG_ADDRESS1, prevIntent.getStringExtra(Constants.TAG_ADDRESS1));
+                intent.putExtra(Constants.TAG_ADDRESS2, prevIntent.getStringExtra(Constants.TAG_ADDRESS2));
+                intent.putExtra(Constants.TAG_CITY, prevIntent.getStringExtra(Constants.TAG_CITY));
+                intent.putExtra(Constants.TAG_STATE, prevIntent.getStringExtra(Constants.TAG_STATE));
+                intent.putExtra(Constants.TAG_ZIP, prevIntent.getStringExtra(Constants.TAG_ZIP));
+                intent.putExtra(Constants.TAG_MOBILE, prevIntent.getStringExtra(Constants.TAG_MOBILE));
+                intent.putExtra(Constants.TAG_HOME, prevIntent.getStringExtra(Constants.TAG_HOME));
+                intent.putExtra(Constants.TAG_OFFICE, prevIntent.getStringExtra(Constants.TAG_OFFICE));
+                intent.putExtra(Constants.TAG_NOTES, prevIntent.getStringExtra(Constants.TAG_NOTES));
+                intent.putExtra("create", false);
+                startActivity(intent);
+            }
+
+
+
         }
 
         return super.onOptionsItemSelected(item);
