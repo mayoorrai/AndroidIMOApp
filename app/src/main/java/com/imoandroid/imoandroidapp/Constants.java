@@ -22,4 +22,7 @@ public class Constants {
     public static final String TAG_HOME = "home";
     public static final String TAG_OFFICE = "office";
     public static final String TAG_NOTES = "notes";
+    public static final String API_SERVER = "http://imoweb.azurewebsites.net/";
+    public static final String API_KEY = "FSdgvuujDNpD1YPVjN95XcSFXBdsVwf66qeijgZDdwkji6GiyqYoKw15JRPywYV5";
+    public static final String URL = API_SERVER + "apiKey=" + API_KEY;
 }
