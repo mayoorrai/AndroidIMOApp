@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -110,21 +111,23 @@ public class PatientListActivity extends Activity{
 
         // enabling action bar app icon and behaving it as toggle button
 
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
-  //      getActionBar().setHomeButtonEnabled(true);
+getActionBar().setDisplayHomeAsUpEnabled(true);
+getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setIcon(
+                new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
         ){
             public void onDrawerClosed(View view) {
-               // getActionBar().setTitle(mTitle);
+               getActionBar().setTitle(mTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                //getActionBar().setTitle(mDrawerTitle);
+                getActionBar().setTitle(mTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
@@ -224,13 +227,13 @@ public class PatientListActivity extends Activity{
     public void patientClickHandler(Patient p) {
         if (p == null) {
             // new patient (empty fields)
-            Intent intent = new Intent(getApplicationContext(), PatientInputForm.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("create", true);
             startActivity(intent);
         }
         else {
             // update patient (nonempty fields)
-            Intent intent = new Intent(getApplicationContext(), PatientInputForm.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra(Constants.TAG_FIRST_NAME, p.getFirstName());
             intent.putExtra(Constants.TAG_LAST_NAME, p.getLastName());
             intent.putExtra(Constants.TAG_GENDER, p.get_gender().getNum());
