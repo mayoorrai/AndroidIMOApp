@@ -193,8 +193,8 @@ public class PatientInputForm extends ActionBarActivity {
     private void verifyAndSend() {
         StringBuilder error = new StringBuilder();
         boolean allGood = true;
-        boolean phone = !ethome.getText().toString().isEmpty() &&
-                !etmobile.getText().toString().isEmpty() &&
+        boolean phone = !ethome.getText().toString().isEmpty() ||
+                !etmobile.getText().toString().isEmpty() ||
                 !etoffice.getText().toString().isEmpty();
 
         int phoneColor = Color.parseColor(phone ? "#ffffff" : "#ffe5e5");
@@ -209,13 +209,13 @@ public class PatientInputForm extends ActionBarActivity {
         }
 
         //Verify Basic Details: EditTexts
-        boolean basicFields = checkIfFilled(etfirstName, error) &&
-                checkIfFilled(etlastName, error) &&
-                checkIfFilled(etaddress1, error) &&
-                checkIfFilled(etcity, error) &&
-                checkIfFilled(etlanguage, error) &&
-                checkIfFilled(etstate, error) &&
-                checkIfFilled(etzip, error);
+        boolean basicFields = checkIfFilled(etfirstName, error);
+        basicFields = basicFields && checkIfFilled(etlastName, error);
+        basicFields = basicFields && checkIfFilled(etaddress1, error);
+        basicFields = basicFields && checkIfFilled(etcity, error);
+        basicFields = basicFields && checkIfFilled(etlanguage, error);
+        basicFields = basicFields && checkIfFilled(etstate, error);
+        basicFields = basicFields && checkIfFilled(etzip, error);
 
         boolean ageSet = ageInt >= 0;
         if(!ageSet)
@@ -252,9 +252,9 @@ public class PatientInputForm extends ActionBarActivity {
                 address.put("city", etcity.getText().toString());
                 address.put("state", etstate.getText().toString());
                 address.put("zip", Integer.parseInt(etzip.getText().toString()));
-                address.put("mobile", Integer.parseInt(etmobile.getText().toString()));
-                address.put("home", Integer.parseInt(ethome.getText().toString()));
-                address.put("office", Integer.parseInt(etoffice.getText().toString()));
+                address.put("mobile", Long.parseLong(etmobile.getText().toString()));
+                address.put("home", Long.parseLong(ethome.getText().toString()));
+                address.put("office", Long.parseLong(etoffice.getText().toString()));
 
                 patient.put("address", address);
                 patient.put("notes", etnotes.getText().toString());
@@ -277,7 +277,7 @@ public class PatientInputForm extends ActionBarActivity {
 
             new AlertDialog.Builder(this)
                     .setTitle("To be sent:")
-                    .setMessage(patient.toString() + "\n" + Constants.URL+"patients")
+                    .setMessage(patient.toString() + "\n" + Constants.API_SERVER+"patients?apiKey="+Constants.API_KEY)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
