@@ -26,10 +26,10 @@
     <string name="strAddress2">Address 2</string>
     <string name="strCity">City</string>
     <string name="strState">State</string>
-    <string name="strZip">Zip</string>
-    <string name="strMobile">Mobile</string>
-    <string name="strHome">Home</string>
-    <string name="strOffice">Office</string>
+    <string name="strZip">Zip Code</string>
+    <string name="strMobile">Mobile Phone</string>
+    <string name="strHome">Home Phone</string>
+    <string name="strOffice">Office Phone</string>
     // Notes    <string name="strNotes">Notes</string>
     // Colors    <color name="white">#FFFFFF</color>
     <color name="cyan">#2299ff</color>

@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strFirstName"
+                android:hint="@string/strFirstName"
                 android:textSize="15dp"
                 android:layout_below="@+id/basicPatientDetails"
                 android:background="@color/white"
@@ -44,24 +44,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strLastName"
+                android:hint="@string/strLastName"
                 android:textSize="15dp"
                 android:layout_below="@+id/firstNameBox"
                 android:background="@color/white"
                 android:padding="5dp"
                 android:layout_margin="7dp"/>
 
-            <DatePicker
-                android:id="@+id/dobBox"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/cyan"
-                android:text="@string/strDOB"
+                android:textColor="@color/white"
                 android:textSize="15dp"
+                android:text="Date of Birth:           "
                 android:layout_below="@+id/lastNameBox"
-                android:background="@color/white"
                 android:padding="5dp"
                 android:layout_margin="7dp"/>
+
+            <Button
+                android:id="@+id/dateButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lastNameBox"
+                android:text="Set Date"
+                android:textSize="15dp"
+                android:layout_toRightOf="@id/tvDate"
+                android:layout_alignBaseline="@+id/tvDate"
+                android:padding="1dp"
+                android:layout_margin="2dp"/>
 
             <TextView
                 android:id="@+id/ageBox"
@@ -70,7 +81,7 @@
                 android:textColor="@color/white"
                 android:text="@string/strAge"
                 android:textSize="15dp"
-                android:layout_below="@+id/dobBox"
+                android:layout_below="@+id/tvDate"
                 android:padding="5dp"
                 android:layout_margin="7dp"/>
 
@@ -85,7 +96,8 @@
                 android:layout_margin="7dp"
                 android:textSize="15sp"
                 android:background="@color/white"
-                android:padding="5dp">
+                android:padding="5dp"
+                android:spinnerMode="dialog">
             </Spinner>
 
             <EditText
@@ -93,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strLanguage"
+                android:hint="@string/strLanguage"
                 android:textSize="15dp"
                 android:layout_below="@+id/genderSpinner"
                 android:background="@color/white"
@@ -125,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strAddress1"
+                android:hint="@string/strAddress1"
                 android:textSize="15dp"
                 android:layout_below="@+id/primaryAddress"
                 android:background="@color/white"
@@ -137,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strAddress2"
+                android:hint="@string/strAddress2"
                 android:textSize="15dp"
                 android:layout_below="@+id/address1Box"
                 android:background="@color/white"
@@ -149,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strCity"
+                android:hint="@string/strCity"
                 android:textSize="15dp"
                 android:layout_below="@+id/address2Box"
                 android:background="@color/white"
@@ -161,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strState"
+                android:hint="@string/strState"
                 android:textSize="15dp"
                 android:layout_below="@+id/cityBox"
                 android:background="@color/white"
@@ -173,7 +185,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strZip"
+                android:inputType="number"
+                android:hint="@string/strZip"
                 android:textSize="15dp"
                 android:layout_below="@+id/stateBox"
                 android:background="@color/white"
@@ -185,7 +198,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strMobile"
+                android:inputType="phone"
+                android:digits="0123456789+()-"
+                android:hint="@string/strMobile"
                 android:textSize="15dp"
                 android:layout_below="@+id/zipBox"
                 android:background="@color/white"
@@ -197,7 +212,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strHome"
+                android:inputType="phone"
+                android:digits="0123456789+()-"
+                android:hint="@string/strHome"
                 android:textSize="15dp"
                 android:layout_below="@+id/mobileBox"
                 android:background="@color/white"
@@ -209,7 +226,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
-                android:text="@string/strOffice"
+                android:inputType="phone"
+                android:digits="0123456789+()-"
+                android:hint="@string/strOffice"
                 android:textSize="15dp"
                 android:layout_below="@+id/homeBox"
                 android:background="@color/white"
@@ -242,6 +261,8 @@
                 android:layout_height="130dp"
                 android:textColor="@color/cyan"
                 android:textSize="15dp"
+                android:hint="Notes about the patient"
+                android:gravity="top"
                 android:layout_below="@+id/notes"
                 android:background="@color/white"
                 android:padding="5dp"
@@ -250,6 +271,7 @@
         </RelativeLayout>
 
         <Button
+            android:id="@+id/submitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/strFinish"

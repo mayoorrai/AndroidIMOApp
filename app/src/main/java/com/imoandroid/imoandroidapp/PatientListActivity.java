@@ -4,7 +4,6 @@ import com.imoandroid.imoandroidapp.model.*;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -208,16 +206,16 @@ public class PatientListActivity extends Activity {
     public void patientClickHandler(Patient p) {
         if (p == null) {
             // new patient (empty fields)
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PatientInputForm.class);
             intent.putExtra("create", true);
             startActivity(intent);
         }
         else {
             // update patient (nonempty fields)
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PatientInputForm.class);
             intent.putExtra(Constants.TAG_FIRST_NAME, p.getFirstName());
             intent.putExtra(Constants.TAG_LAST_NAME, p.getLastName());
-            intent.putExtra(Constants.TAG_GENDER, p.get_gender());
+            intent.putExtra(Constants.TAG_GENDER, p.get_gender().getNum());
             intent.putExtra(Constants.TAG_DOB, p.getDOB().getTime());
             intent.putExtra(Constants.TAG_ADDRESS1, p.address.getAddress1());
             intent.putExtra(Constants.TAG_ADDRESS2, p.address.getAddress2());
