@@ -214,6 +214,12 @@ getActionBar().setHomeButtonEnabled(true);
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_patient_add)
+        {
+            Intent mainIntent = new Intent(this,PatientInputForm.class);
+            mainIntent.putExtra("create", true);
+            this.startActivity(mainIntent);
+        }
 
         return super.onOptionsItemSelected(item);
     }
