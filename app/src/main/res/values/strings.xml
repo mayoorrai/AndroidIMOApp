@@ -39,6 +39,6 @@
     <string name="header_all_patients">All Patients</string>
     <string name="button_add_new_patient">Add New Patient</string>
     <string name="title_activity_patient_input_form">PatientInputForm</string>
-    <string name="patient_nav_drawer">View All Patients</string>
+    <string name="patient_nav_drawer">Add Patient</string>
 
 </resources>
