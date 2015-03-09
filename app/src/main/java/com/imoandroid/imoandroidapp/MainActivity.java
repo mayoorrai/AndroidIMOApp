@@ -133,7 +133,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
         if (id == R.id.action_patient_nav_drawer)
         {
-            Intent mainIntent = new Intent(this,PatientListActivity.class);
+            Intent mainIntent = new Intent(this,PatientInputForm.class);
             this.startActivity(mainIntent);
         }
 
