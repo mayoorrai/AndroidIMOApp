@@ -4,9 +4,9 @@
     <string name="app_name">IMOAndroidApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    // Actions    <string name="strFinish">Finish</string>
+    // Actions        <string name="strFinish">Finish</string>
     //// Create New Patient Vars
-    // Basic Patient Details    <string name="strBasicPatientDetails">Basic Patient Details</string>
+    // Basic Patient Details        <string name="strBasicPatientDetails">Basic Patient Details</string>
     <string name="strFirstName">First Name</string>
     <string name="strLastName">Last Name</string>
     <string name="strGender">Gender</string>
@@ -15,14 +15,14 @@
     <string name="strLanguage">Language</string>
     <string name="strPrimaryAddress">Primary Address</string>
     <string name="strPatientID">Patient ID: </string>
-    // Gender Spinner    <string name="strGenderPrompt">Choose Gender</string>
+    // Gender Spinner        <string name="strGenderPrompt">Choose Gender</string>
 
     <string-array name="gender_array">
         <item>Male</item>
         <item>Female</item>
         <item>Other</item>
     </string-array>
-    // Primary Address    <string name="strAddress1">Address 1</string>
+    // Primary Address        <string name="strAddress1">Address 1</string>
     <string name="strAddress2">Address 2</string>
     <string name="strCity">City</string>
     <string name="strState">State</string>
@@ -38,5 +38,6 @@
     <string name="title_activity_patient_list">PatientListActivity</string>
     <string name="header_all_patients">All Patients</string>
     <string name="button_add_new_patient">Add New Patient</string>
+    <string name="title_activity_patient_input_form">PatientInputForm</string>
 
 </resources>

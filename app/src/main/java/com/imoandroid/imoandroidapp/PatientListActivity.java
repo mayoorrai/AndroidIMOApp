@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.widget.DrawerLayout;
+import android.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.view.Window;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class PatientListActivity extends Activity {
+public class PatientListActivity extends Activity{
     retrievePatientData thing;
     public List<Patient> patientList = new ArrayList<Patient>();
     public ListView mDrawerList;
@@ -64,6 +66,8 @@ public class PatientListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        setContentView(R.layout.activity_patient_list);
 
         Log.v(TAG, "Hello");
         // Connect to URL
@@ -75,9 +79,14 @@ public class PatientListActivity extends Activity {
             Toast.makeText(this, "Network Unavailable!",  Toast.LENGTH_LONG).show();
         }
 
-        setContentView(R.layout.activity_patient_list);
+
         mTitle = "All Patients";
         mDrawerTitle = getTitle();
+
+
+        ActionBar actionBar = getActionBar();
+        actionBar.show();
+
 
         SystemClock.sleep(10000);
         // load slide menu items (with patient names)
@@ -99,25 +108,29 @@ public class PatientListActivity extends Activity {
         }
 
         // enabling action bar app icon and behaving it as toggle button
+
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
-//        getActionBar().setHomeButtonEnabled(true);
+  //      getActionBar().setHomeButtonEnabled(true);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.app_name, // nav drawer open - description for accessibility
                 R.string.app_name // nav drawer close - description for accessibility
-        ) {
+        ){
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+               // getActionBar().setTitle(mTitle);
                 // calling onPrepareOptionsMenu() to show action bar icons
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                //getActionBar().setTitle(mDrawerTitle);
                 // calling onPrepareOptionsMenu() to hide action bar icons
                 invalidateOptionsMenu();
             }
         };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
 
 
        // addPatient = (Button) findViewById(R.id.buttonAddNewPatient);
@@ -147,19 +160,19 @@ public class PatientListActivity extends Activity {
         getActionBar().setTitle(mTitle);
     }
 
-//    @Override
-//    protected void onPostCreate(Bundle savedInstanceState) {
-//        super.onPostCreate(savedInstanceState);
-//        // Sync the toggle state after onRestoreInstanceState has occurred.
-//        mDrawerToggle.syncState();
-//    }
+   @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 //
-//    @Override
-//    public void onConfigurationChanged(Configuration newConfig) {
-//        super.onConfigurationChanged(newConfig);
-//        // Pass any configuration change to the drawer toggle
-//        mDrawerToggle.onConfigurationChanged(newConfig);
-//    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggle
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
 
     private void getPatientNames() {
@@ -188,6 +201,10 @@ public class PatientListActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
