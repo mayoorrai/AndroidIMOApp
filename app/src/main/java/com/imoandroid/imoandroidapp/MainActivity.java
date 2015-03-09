@@ -30,7 +30,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     List tabFragmentList = new ArrayList();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.v(TAG, "Entering MainActivity: onCreate...");
@@ -114,8 +113,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     }
 
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -137,9 +134,5 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
 
 }

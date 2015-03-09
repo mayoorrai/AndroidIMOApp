@@ -275,6 +275,17 @@ public class PatientInputForm extends ActionBarActivity {
                 return;
             }
 
+            new AlertDialog.Builder(this)
+                    .setTitle("To be sent:")
+                    .setMessage(patient.toString() + "\n" + Constants.URL+"patients")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
+            /**
             HttpClient httpClient = new DefaultHttpClient();
 
             //TODO: ask Web Team about how to use api key...
@@ -291,7 +302,7 @@ public class PatientInputForm extends ActionBarActivity {
                 // handle exception here
             } finally {
                 httpClient.getConnectionManager().shutdown();
-            }
+            }**/
         }
         else
         {

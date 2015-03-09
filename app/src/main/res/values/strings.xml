@@ -30,8 +30,8 @@
     <string name="strMobile">Mobile Phone</string>
     <string name="strHome">Home Phone</string>
     <string name="strOffice">Office Phone</string>
-    // Notes        <string name="strNotes">Notes</string>
-    // Colors        <color name="white">#FFFFFF</color>
+    // Notes    <string name="strNotes">Notes</string>
+    // Colors    <color name="white">#FFFFFF</color>
     <color name="cyan">#2299ff</color>
 
     <string name="title_activity_splash">SplashActivity</string>
