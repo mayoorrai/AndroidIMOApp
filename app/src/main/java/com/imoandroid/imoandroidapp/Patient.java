@@ -3,7 +3,7 @@ package com.imoandroid.imoandroidapp;
 import java.util.Date;
 
 public class Patient {
-
+	// Sammy wrote code!
     // Basic Patient Details
     String firstName; //patient's first name
     String lastName; //the patient's last name
