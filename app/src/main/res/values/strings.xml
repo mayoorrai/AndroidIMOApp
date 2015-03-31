@@ -41,5 +41,6 @@
     <string name="title_activity_patient_input_form">PatientInputForm</string>
     <string name="add_a_patient">Add Patient</string>
     <string name="edit_a_patient">Edit Patient</string>
+    <string name="title_activity_foundation">FoundationActivity</string>
 
 </resources>
