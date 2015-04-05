@@ -4,7 +4,8 @@
     android:id="@+id/drawer_layout"
     android:layout_height="match_parent"
     tools:context="com.imoandroid.imoandroidapp.PatientListActivity"
-    android:theme="@android:style/Theme.WithActionBar" >>
+    android:theme="@android:style/Theme.WithActionBar" >
+
 
     <ListView
         android:id="@+id/patientListView"
@@ -16,4 +17,5 @@
         android:dividerHeight="1dp"
         android:listSelector="@drawable/list_selector"
         android:background="@color/list_background"/>
+
 </android.support.v4.widget.DrawerLayout>
