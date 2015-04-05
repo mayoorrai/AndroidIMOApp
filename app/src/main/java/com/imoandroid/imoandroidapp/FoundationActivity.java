@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,18 +17,10 @@ import com.imoandroid.imoandroidapp.model.NavDrawerItem;
 import java.util.ArrayList;
 
 
-public class FoundationActivity extends FragmentActivity {
+public class FoundationActivity extends ActionBarActivity {
     public final String TAG = FoundationActivity.class.getSimpleName();
 
-    /**
-     * Navbar logic
-     */
-    private DrawerLayout mDrawerLayout;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;            // used to store app title
-    private ArrayList<String> navDrawerPatientNames;
-    private TypedArray navMenuIcons;
-    private ArrayList<NavDrawerItem> navDrawerPatients;
+
 
     /**
      * Tab FragmentHost
@@ -40,18 +33,11 @@ public class FoundationActivity extends FragmentActivity {
         setContentView(R.layout.activity_foundation);
 
         initializeTabs();
-        initializeNavbar();
+
 
     }
 
-    private void initializeNavbar() {
-        mTitle = "All Patients";
-        mDrawerTitle = getTitle();
 
-        /**
-         * TODO listview logic
-         */
-    }
 
     private void initializeTabs() {
         // Initialize tabhost (parent)

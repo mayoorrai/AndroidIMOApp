@@ -4,9 +4,9 @@
     <string name="app_name">IMOAndroidApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    // Actions        <string name="strFinish">Finish</string>
+    // Actions            <string name="strFinish">Finish</string>
     //// Create New Patient Vars
-    // Basic Patient Details        <string name="strBasicPatientDetails">Basic Patient Details</string>
+    // Basic Patient Details            <string name="strBasicPatientDetails">Basic Patient Details</string>
     <string name="strFirstName">First Name</string>
     <string name="strLastName">Last Name</string>
     <string name="strGender">Gender</string>
@@ -15,14 +15,14 @@
     <string name="strLanguage">Language</string>
     <string name="strPrimaryAddress">Primary Address</string>
     <string name="strPatientID">Patient ID: </string>
-    // Gender Spinner        <string name="strGenderPrompt">Choose Gender</string>
+    // Gender Spinner            <string name="strGenderPrompt">Choose Gender</string>
 
     <string-array name="gender_array">
         <item>Male</item>
         <item>Female</item>
         <item>Other</item>
     </string-array>
-    // Primary Address        <string name="strAddress1">Address 1</string>
+    // Primary Address            <string name="strAddress1">Address 1</string>
     <string name="strAddress2">Address 2</string>
     <string name="strCity">City</string>
     <string name="strState">State</string>
@@ -30,8 +30,8 @@
     <string name="strMobile">Mobile Phone</string>
     <string name="strHome">Home Phone</string>
     <string name="strOffice">Office Phone</string>
-    // Notes    <string name="strNotes">Notes</string>
-    // Colors    <color name="white">#FFFFFF</color>
+    // Notes        <string name="strNotes">Notes</string>
+    // Colors        <color name="white">#FFFFFF</color>
     <color name="cyan">#2299ff</color>
 
     <string name="title_activity_splash">SplashActivity</string>
@@ -42,5 +42,12 @@
     <string name="add_a_patient">Add Patient</string>
     <string name="edit_a_patient">Edit Patient</string>
     <string name="title_activity_foundation">FoundationActivity</string>
+    <string name="title_activity_navigation_drawer_patient">NavigationDrawerPatient</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
 
 </resources>

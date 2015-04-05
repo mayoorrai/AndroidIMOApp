@@ -7,14 +7,19 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--<android:uses-permission-->
-        <!--android:name="android.permission.WRITE_EXTERNAL_STORAGE"-->
-        <!--android:maxSdkVersion="18" />-->
-    <!--<android:uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
-    <!--<android:uses-permission-->
-        <!--android:name="android.permission.READ_EXTERNAL_STORAGE"-->
-        <!--android:maxSdkVersion="18" />-->
-
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" /> <!-- <android:uses-permission -->
+    <!-- android:name="android.permission.WRITE_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="18" /> -->
+    <!-- <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
+    <!-- <android:uses-permission -->
+    <!-- android:name="android.permission.READ_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="18" /> -->
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -28,7 +33,6 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/title_activity_splash" >
-
         </activity>
         <activity
             android:name=".PatientListActivity"
@@ -40,14 +44,20 @@
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-
         <activity
             android:name=".FoundationActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/title_activity_foundation"
-            android:theme="@android:style/Theme.Holo">
 
+            android:label="@string/title_activity_foundation"
+
+            android:theme="@android:style/Theme.Holo" >
+
+        </activity>
+        <activity
+            android:name=".NavigationDrawerPatient"
+            android:label="@string/title_activity_navigation_drawer_patient"
+            android:theme="@style/AppTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
