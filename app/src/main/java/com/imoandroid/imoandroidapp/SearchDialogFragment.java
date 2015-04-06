@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ import com.imoandroid.imoandroidapp.APICaller.APICaller;
 
 import java.util.ArrayList;
 
-public class SearchDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener{
+public class SearchDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM = "param";
@@ -37,10 +39,16 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
     String[] listItems = {};
 
+    long time;
+    int tally;
 
     private ListView lvResults;
     private ArrayAdapter<String> listAdapter;
     private ArrayAdapter<String> listAdapterAPIResults;
+
+    private ImageButton clear;
+    private Button submit;
+    private EditText et;
 
     /**
      * Use this factory method to create a new instance of
@@ -69,7 +77,8 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             this.mTab = getArguments().getInt(ARG_PARAM);
         }
 
-
+        time = 0;
+        tally=0;
 
     }
 
@@ -78,7 +87,11 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_dialog, container, false);
-        EditText et = (EditText) v.findViewById(R.id.etSearch);
+        et = (EditText) v.findViewById(R.id.etSearch);
+        clear = (ImageButton) v.findViewById(R.id.clearSearch);
+        clear.setVisibility(View.GONE);
+        submit = (Button) v.findViewById(R.id.bDoSearch);
+        submit.setClickable(false);
         lvResults = (ListView) v.findViewById(R.id.lvResults);
 
         listAdapter = new ArrayAdapter<String>(getActivity(),
@@ -87,6 +100,9 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
         lvResults.setAdapter(listAdapter);
         lvResults.setOnItemClickListener(this);
+
+        clear.setOnClickListener(this);
+        submit.setOnClickListener(this);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         switch (mTab) {
@@ -107,11 +123,36 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
+                boolean exists = s.length() > 0;
+                clear.setVisibility(exists? View.VISIBLE:View.GONE);
+                submit.setClickable(exists);
+                if (s.length() < 2) {
                     return;
                 }
+
+                if (time == 0) {
+                    time = System.currentTimeMillis();
+                    return;
+                }
+                else{
+                    long diff = System.currentTimeMillis() - time;
+                    time += diff;
+                    if (diff < 1500)
+                    {
+                        tally=0;
+                        return;
+                    }
+                    else if (++tally < 2)
+                    {
+                        return;
+                    }
+                }
+
+                tally=0;
                 //make api call and get list of objects
                 //update list view
+                APICall(s.toString());
+                /**
                 String[] APIResults = APICaller.vocabularyGET(s.toString(), 100);
                 ArrayList<String> arrayList = new ArrayList<String>();
                 for (int i = 0; i < APIResults.length; i++) {
@@ -120,7 +161,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                 listAdapterAPIResults = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_list_item_1, arrayList);
 
-                lvResults.setAdapter(listAdapterAPIResults);
+                lvResults.setAdapter(listAdapterAPIResults);**/
             }
 
             @Override
@@ -165,4 +206,30 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
     }
 
+    @Override
+    public void onClick(View v)
+    {
+        if (v == clear)
+        {
+            et.setText("");
+        }
+        else if (v==submit)
+        {
+            APICall(et.getText().toString());
+        }
+    }
+
+    //TODO: Add check for type of search (proc vs diagnosis vs prescription)
+    private void APICall(String s)
+    {
+        String[] APIResults = APICaller.vocabularyGET(s, 100);
+        ArrayList<String> arrayList = new ArrayList<String>();
+        for (int i = 0; i < APIResults.length; i++) {
+            arrayList.add(APIResults[i]);
+        }
+        listAdapterAPIResults = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, arrayList);
+
+        lvResults.setAdapter(listAdapterAPIResults);
+    }
 }

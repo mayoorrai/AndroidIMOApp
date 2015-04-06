@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TabWidget;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ import java.util.Collections;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -66,6 +67,7 @@ public class NavigationDrawerFragment extends Fragment {
     private ListView mDrawerListView;
     private EditText patientSearch;
     private View mFragmentContainerView;
+    private ImageButton clear;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -130,10 +132,11 @@ public class NavigationDrawerFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_navigation_drawer  , container , false);
 
 
-
         mDrawerListView = (ListView) v.findViewById(R.id.patientLV);
         patientSearch = (EditText) v.findViewById(R.id.etPatients);
-
+        clear = (ImageButton)v.findViewById(R.id.clearPat);
+        clear.setVisibility(View.GONE);
+        clear.setOnClickListener(this);
 
         listAdapter = new DisplayPatientAdapter(v.getContext() , R.layout.activity_patient_holder , (ArrayList<Patient>) tempPatients);
         mDrawerListView.setAdapter(listAdapter);
@@ -146,6 +149,9 @@ public class NavigationDrawerFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean exists = s.length() > 0;
+                clear.setVisibility(exists? View.VISIBLE: View.GONE);
+
                 List<Patient> searchPatients = new ArrayList<Patient>();
                 for(int i = 0 ; i < allPatients.size() ; i++){
                     Patient p = allPatients.get(i);
@@ -156,7 +162,6 @@ public class NavigationDrawerFragment extends Fragment {
                 listAdapter.data.clear();
                 listAdapter.addAll(searchPatients);
                 listAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -335,5 +340,14 @@ public class NavigationDrawerFragment extends Fragment {
          * Called when an item in the navigation drawer is selected.
          */
         void onNavigationDrawerItemSelected(int position);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if(v==clear)
+        {
+            patientSearch.setText("");
+        }
     }
 }
