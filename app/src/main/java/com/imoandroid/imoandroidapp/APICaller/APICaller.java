@@ -110,7 +110,7 @@ public final class APICaller {
         return null;
     }
 
-    public static String[] vocabularyGET(final String queryWord, final int limit){
+    public static ArrayList<Map> vocabularyGET(final String queryWord, final int limit){
         try {
             String[]params = {"query", "limit", "apiKey"};
             String[]values = {"*" + queryWord + "*",Integer.toString(limit), API_KEY};
@@ -119,20 +119,22 @@ public final class APICaller {
             Map<String, Object> jsonMap = slurp(VOCABULARY_URL_PATH, query);
             Map a = (Map) jsonMap.get("data");
 
-            ArrayList<Object> obj = (ArrayList<Object>) a.get("items");
-            HashMap <String, LinkedHashMap> items = new HashMap <String, LinkedHashMap>();
-            ArrayList al = new ArrayList();
-            for (Object item : obj){
-                items.put((String)((Map)item).get("code"), (LinkedHashMap) item);
-                al.add(((Map)item).get("title").toString());
-            }
-            String[] backer = new String[al.size()];
+            ArrayList<Map> obj = (ArrayList<Map>) a.get("items");
 
-            for (int i = 0; i < backer.length; ++i){
-                backer[i] = al.get(i).toString();
-            }
 
-            return backer;
+//            HashMap <String, LinkedHashMap> items = new HashMap <String, LinkedHashMap>();
+//            ArrayList al = new ArrayList();
+//            for (Object item : obj){
+//                items.put((String)((Map)item).get("code"), (LinkedHashMap) item);
+//                al.add(((Map)item).get("title").toString());
+//            }
+//            String[] backer = new String[al.size()];
+//
+//            for (int i = 0; i < backer.length; ++i){
+//                backer[i] = al.get(i).toString();
+//            }
+
+            return obj;
 
 //            Map sortedStuff = ArrayTools.sortShit(obj, "code");
 //            System.out.println(Arrays.toString(items.entrySet().toArray()));
