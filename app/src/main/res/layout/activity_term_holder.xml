@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:descendantFocusability="blocksDescendants"
+    tools:context="com.imoandroid.imoandroidapp.PatientListActivity">
+
+    <TextView
+        android:id="@+id/termTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="#000"
+        android:gravity="center_vertical"
+        android:layout_toLeftOf="@+id/addTermButton"/>
+
+    <Button
+        android:id="@+id/addTermButton"
+        android:focusable="false"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_margin="5dp"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingBottom="2dp"
+        android:background="#666"
+        android:textStyle="bold"
+        android:text="+"
+        android:gravity="center"/>
+
+</RelativeLayout>

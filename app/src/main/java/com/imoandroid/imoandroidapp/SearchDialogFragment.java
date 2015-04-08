@@ -1,8 +1,11 @@
 package com.imoandroid.imoandroidapp;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.support.v4.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +32,9 @@ import android.widget.Toast;
 
 import com.imoandroid.imoandroidapp.APICaller.APICaller;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
@@ -41,14 +47,20 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
     long time;
     int tally;
+    private int width;
+    boolean frameDisplayed;
 
     private ListView lvResults;
-    private ArrayAdapter<String> listAdapter;
+    private ListView lvChart;
+    private DisplayTermAdapter listAdapter;
+    private DisplayTermAdapter chartAdapter;
     private ArrayAdapter<String> listAdapterAPIResults;
 
-    private ImageButton clear;
+    private Button clear;
     private Button submit;
     private EditText et;
+    private View searchView;
+    private View frameView;
 
     /**
      * Use this factory method to create a new instance of
@@ -62,6 +74,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         SearchDialogFragment fragment = new SearchDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM, param);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,17 +100,31 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_dialog, container, false);
+        searchView = (View) v.findViewById(R.id.searchLayout);
+        frameView = (View) v.findViewById(R.id.frame);
+        Point size = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+        width = size.x;
+        ViewGroup.LayoutParams params = searchView.getLayoutParams();
+        params.width = size.x/2;
+        searchView.setLayoutParams(params);
+        frameView.setVisibility(View.GONE);
+        frameDisplayed = false;
         et = (EditText) v.findViewById(R.id.etSearch);
-        clear = (ImageButton) v.findViewById(R.id.clearSearch);
+        clear = (Button) v.findViewById(R.id.clearSearch);
         clear.setVisibility(View.GONE);
         submit = (Button) v.findViewById(R.id.bDoSearch);
         submit.setClickable(false);
         lvResults = (ListView) v.findViewById(R.id.lvResults);
+        lvChart = (ListView) v.findViewById(R.id.lvChart);
 
-        listAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, listItems);
+        listAdapter = new DisplayTermAdapter(getActivity().getApplicationContext(),R.layout.activity_term_holder,
+                getArrayList(listItems),true);
 
+        chartAdapter = new DisplayTermAdapter(getActivity().getApplicationContext(),R.layout.activity_term_holder,
+                getArrayList(listItems),false);
 
+        lvChart.setAdapter(chartAdapter);
         lvResults.setAdapter(listAdapter);
         lvResults.setOnItemClickListener(this);
 
@@ -209,6 +236,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     @Override
     public void onClick(View v)
     {
+        Button b = (Button) v;
         if (v == clear)
         {
             et.setText("");
@@ -217,19 +245,142 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         {
             APICall(et.getText().toString());
         }
+        else if (b.getTag() instanceof String)
+        {
+            displayFrame();
+
+            if (b.getText().equals("+")) {
+                //add term to chart
+                Log.v("as","as");
+
+                chartAdapter.Add((String) v.getTag());
+
+                Toast.makeText(getActivity().getApplicationContext(), "Added \"" + (String) v.getTag()
+                        + "\" to chart"
+                        , Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                chartAdapter.Delete((String) b.getTag());
+
+                Toast.makeText(getActivity().getApplicationContext(), "Removed \"" + (String) v.getTag()
+                        + "\" from chart"
+                        , Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void displayFrame() {
+        if (frameDisplayed)
+        {
+            return;
+        }
+
+        frameDisplayed = true;
+
+        ViewGroup.LayoutParams params = searchView.getLayoutParams();
+        params.width = width/3;
+        searchView.setLayoutParams(params);
+
+        params = frameView.getLayoutParams();
+        params.width = width*2/3;
+        frameView.setLayoutParams(params);
+        frameView.setVisibility(View.VISIBLE);
     }
 
     //TODO: Add check for type of search (proc vs diagnosis vs prescription)
     private void APICall(String s)
     {
         String[] APIResults = APICaller.vocabularyGET(s, 100);
-        ArrayList<String> arrayList = new ArrayList<String>();
-        for (int i = 0; i < APIResults.length; i++) {
-            arrayList.add(APIResults[i]);
-        }
-        listAdapterAPIResults = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, arrayList);
+        //ArrayList<String> arrayList = new ArrayList<String>();
+        //for (int i = 0; i < APIResults.length; i++) {
+        //    arrayList.add(APIResults[i]);
+        //}
+        //listAdapterAPIResults = new DisplayTermAdapter(
+               // getActivity().getApplicationContext(),
+                //R.layout.activity_term_holder,
+                //arrayList,true);
+        listAdapter.UpdateData(getArrayList(APIResults));
 
-        lvResults.setAdapter(listAdapterAPIResults);
+        //lvResults.setAdapter(listAdapterAPIResults);
     }
+
+    public ArrayList<String> getArrayList(String [] data)
+    {
+        ArrayList<String> ret = new ArrayList<String>();
+        for(int i=0;i<data.length;i++)
+        {
+            ret.add(data[i]);
+        }
+        return ret;
+    }
+
+    public class DisplayTermAdapter extends ArrayAdapter<String> {
+        Context mContext;
+        int layoutResourceID;
+        ArrayList<String> data = new ArrayList<String>();
+        boolean plus;
+
+        // Adapter Constructor
+        public DisplayTermAdapter(Context mContext, int layoutResourceID, ArrayList<String> data,
+                                  boolean plus) {
+            super(mContext, layoutResourceID, data);
+
+            this.mContext = mContext;
+            this.layoutResourceID = layoutResourceID;
+            this.data = data;
+            this.plus = plus;
+        }
+
+        public void Add(String s)
+        {
+            data.add(s);
+            notifyDataSetChanged();
+        }
+
+        public void Delete(String s)
+        {
+            data.remove(s);
+
+            notifyDataSetChanged();
+        }
+
+        public void UpdateData(ArrayList<String> newData)
+        {
+            data.clear();
+            for (int i=0;i<newData.size();i++)
+            {
+                data.add(newData.get(i));
+            }
+            notifyDataSetChanged();
+        }
+
+
+        @Override
+        public View getView(int position, View child, ViewGroup parent) {
+            TextView term;
+            Button addTerm;
+            if (child == null) {
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                child = inflater.inflate(layoutResourceID, parent, false);
+                term = (TextView) child.findViewById(R.id.termTitle);
+                child.setTag(term);
+            }
+            else {
+                term = (TextView) child.getTag();
+            }
+            addTerm = (Button) child.findViewById(R.id.addTermButton);
+            String t = data.get(position);
+            term.setTag(t);
+            term.setText(t);
+            addTerm.setTag(t);
+            addTerm.setOnClickListener(SearchDialogFragment.this);
+            if(!plus)
+            {
+                addTerm.setText("-");
+            }
+            return child;
+        }
+    }
+
 }
