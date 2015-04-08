@@ -7,9 +7,10 @@
 
     <LinearLayout
         android:id="@+id/searchLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="1dp"
         android:layout_height="fill_parent"
         android:orientation="vertical"
+        android:background="@color/imo_tint"
         >
 
         <TextView
@@ -17,7 +18,7 @@
             android:layout_height="50dp"
             android:text="Add Term"
             android:gravity="center"
-            android:background="#000"
+            android:background="@color/imo_back"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:padding="12dp"/>
@@ -25,6 +26,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:background="@color/imo_button"
             >
             <EditText
                 android:id="@+id/etSearch"
@@ -52,6 +54,7 @@
                 android:gravity="right"
                 android:text="Search"
                 android:textSize="17sp"
+                android:textColor="@color/white"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"/>
             <Button
@@ -84,22 +87,23 @@
 
     <!-- Frames to display on right -->
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="400dp"
         android:layout_height="fill_parent"
         android:id="@+id/frame">
 
         <!-- Chart fragment -->
         <LinearLayout
+            android:id="@+id/fragChart"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            android:background="#eee"
+            android:background="@color/imo_tint"
             >
 
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
-                android:background="#000"
+                android:background="@color/imo_back"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -108,15 +112,15 @@
                     android:textSize="25dip"
                     android:padding="12dip"
                     android:gravity="center"
-                    android:background="#000"
                     android:textColor="@color/white"
                     android:layout_centerHorizontal="true"
                     />
                 <ImageButton
+                    android:id="@+id/bCloseChart"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-                    android:background="#000000"
+                    android:background="@color/imo_back"
                     android:padding="10dp"/>
                 </RelativeLayout>
 
@@ -136,7 +140,6 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#444"
                 android:layout_gravity="right"
                 android:layout_marginRight="40dp"
                 android:text="Save Chart"
@@ -145,5 +148,146 @@
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"/>
             </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/fragTermDetails"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/imo_tint">
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:background="@color/imo_back"
+                android:id="@+id/deetsBar">
+                <TextView
+                    android:id="@+id/tdLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="Term Details"
+                    android:textSize="25dip"
+                    android:padding="12dip"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:layout_centerHorizontal="true"
+                    />
+                <Button
+                    android:id="@+id/bViewChart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignBottom="@+id/tdLabel"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="View Chart"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"/>
+                </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/deetsLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/deetsBar"
+                    android:background="@color/white"
+                    android:layout_margin="40dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:textColor="#000"
+                            android:padding="3dp"
+                            android:text="IMO Term:"/>
+                        <TextView
+                            android:id="@+id/tvIMOTerm"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:padding="3dp"
+                            android:textColor="#000"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/light_blue">
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:padding="3dp"
+                            android:textColor="#000"
+                            android:text="IMO Consumer Term:"/>
+                        <TextView
+                            android:id="@+id/tvConsumerTerm"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:padding="3dp"
+                            android:textColor="#000"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:textColor="#000"
+                            android:padding="3dp"
+                            android:text="Preferred ICD-9 Code(s):"/>
+                        <TextView
+                            android:id="@+id/tvICD9"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:padding="3dp"
+                            android:textColor="#000"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@color/light_blue">
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:textStyle="bold"
+                            android:padding="3dp"
+                            android:textColor="#000"
+                            android:text="Preferred ICD10 Code(s):"/>
+                        <TextView
+                            android:id="@+id/tvICD10"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:padding="3dp"
+                            android:textColor="#000"/>
+                    </LinearLayout>
+
+                    </LinearLayout>
+
+                <Button
+                    android:id="@+id/bAddDetails"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/deetsLayout"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"
+                    android:text="Add to Chart"/>
+            </RelativeLayout>
         </FrameLayout>
 </LinearLayout>

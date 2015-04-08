@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class tester {
     public static void main (String[] args) {
-        ArrayList<Map> temp = APICaller.vocabularyGET("arm", 23);
+        ArrayList<Map> temp = APICaller.TxGET("arm", 23);
         for(int i = 0; i < temp.size(); i++) {
             System.out.println(temp.get(i));
         }
