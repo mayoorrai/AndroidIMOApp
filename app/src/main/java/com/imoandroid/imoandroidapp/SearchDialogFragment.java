@@ -54,23 +54,34 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     int tally;
     private int width;
     boolean frameDisplayed;
+    boolean setWhite = true;
     // hacky
     private HashMap<Map,Boolean> isAdded = new HashMap<Map,Boolean>();
     private int rl;
     private long chartInterval = 0;
     private int termSelected = -1;
+    private View before = null;
 
     private ListView lvResults;
     private ListView lvChart;
+    private View chartFrag;
+    private View detailsFrag;
     private DisplayTermAdapter listAdapter;
     private DisplayTermAdapter chartAdapter;
     private ArrayAdapter<String> listAdapterAPIResults;
 
     private Button clear;
     private Button submit;
+    private Button addDetail;
+    private Button viewChart;
+    private ImageButton closeChart;
     private EditText et;
     private View searchView;
     private View frameView;
+    private TextView IMOTerm;
+    private TextView ConTerm;
+    private TextView ICD9;
+    private TextView ICD10;
 
     /**
      * Use this factory method to create a new instance of
@@ -128,6 +139,20 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         submit.setEnabled(false);
         lvResults = (ListView) v.findViewById(R.id.lvResults);
         lvChart = (ListView) v.findViewById(R.id.lvChart);
+        IMOTerm = (TextView)v.findViewById(R.id.tvIMOTerm);
+        ConTerm = (TextView)v.findViewById(R.id.tvConsumerTerm);
+        ICD9 = (TextView)v.findViewById(R.id.tvICD9);
+        ICD10 = (TextView)v.findViewById(R.id.tvICD10);
+        addDetail = (Button)v.findViewById(R.id.bAddDetails);
+        addDetail.setOnClickListener(this);
+        viewChart = (Button)v.findViewById(R.id.bViewChart);
+        viewChart.setOnClickListener(this);
+        closeChart = (ImageButton)v.findViewById(R.id.bCloseChart);
+        closeChart.setOnClickListener(this);
+        chartFrag = v.findViewById(R.id.fragChart);
+        detailsFrag = v.findViewById(R.id.fragTermDetails);
+        before = detailsFrag;
+
 
         listAdapter = new DisplayTermAdapter(getActivity().getApplicationContext(),R.layout.activity_term_holder,
                 getArrayList(listItems),true);
@@ -201,19 +226,55 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         return v;
     }
 
+    private void setDetails(Map toSet)
+    {
+        IMOTerm.setText((String)toSet.get("title"));
+        ConTerm.setText((String)toSet.get("title"));
+        ICD9.setText(toSet.get("kndg_code")+"- "+toSet.get("kndg_title"));
+        ICD10.setText(toSet.get("ICD10CM_CODE")+"- "+toSet.get("ICD10CM_TITLE"));
+        addDetail.setTag(toSet);
+        addDetail.setEnabled(!isAdded.get(toSet));
+    }
+
+    private void clearDetails()
+    {
+        IMOTerm.setText("");
+        ConTerm.setText("");
+        ICD9.setText("");
+        ICD10.setText("");
+        addDetail.setTag(null);
+        addDetail.setEnabled(true);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         closeKeyboard();
 
         listAdapter.setSelected(position);
-        // update term details
+
+        setDetails(listAdapter.Get(position));
+        detailsFrag.bringToFront();
+        displayFrame();
     }
-
-
 
     @Override
     public void onClick(View v)
     {
+        if (v instanceof ImageButton)
+        {
+            if(before == null)
+            {
+                frameDisplayed=false;
+                frameView.setVisibility(View.GONE);
+                ViewGroup.LayoutParams params = searchView.getLayoutParams();
+                params.width = width/3;
+                searchView.setLayoutParams(params);
+            }
+            before.bringToFront();
+
+            return;
+        }
+
         Button b = (Button) v;
         if (v == clear)
         {
@@ -224,6 +285,22 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             closeKeyboard();
             APICall(et.getText().toString());
         }
+        else if(v==addDetail)
+        {
+            listAdapter.setAdded((Map) v.getTag());
+            chartAdapter.Add((Map) v.getTag());
+
+            Toast.makeText(getActivity().getApplicationContext(), "Added \"" + (String) ((Map) v.getTag()).get("code")
+                    + "\" to chart"
+                    , Toast.LENGTH_SHORT).show();
+
+            addDetail.setEnabled(false);
+        }
+        else if(v==viewChart)
+        {
+            chartFrag.bringToFront();
+        }
+
         else if (b.getTag() instanceof Map)
         {
             closeKeyboard();
@@ -239,7 +316,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                 chartInterval += diff;
             }
 
-            if (b.getText().equals("+")) {
+            if (!b.getText().equals("-")) {
                 //add term to chart
                 Log.v("as","as");
 
@@ -253,8 +330,6 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             else
             {
                 listAdapter.setRemoved(chartAdapter.Delete((Map) b.getTag()));
-
-
 
                 Toast.makeText(getActivity().getApplicationContext(), "Removed \"" + (String) ((Map)v.getTag()).get("code")
                         + "\" from chart"
@@ -281,10 +356,23 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         frameView.setVisibility(View.VISIBLE);
     }
 
-    //TODO: Add check for type of search (proc vs diagnosis vs prescription)
     private void APICall(String s)
     {
-        ArrayList<Map> APIResults = APICaller.vocabularyGET(s, 100);
+        ArrayList<Map> APIResults;
+
+        switch (mTab) {
+            case 0: APIResults = APICaller.DxGET(s,100);
+                break;
+            case 1: APIResults = APICaller.RxGET(s,100);
+                break;
+            case 2: //idk about Hx
+                APIResults = APICaller.RxGET(s,100);
+                break;
+            case 3: APIResults = APICaller.TxGET(s,100);
+                break;
+            default:
+                APIResults = APICaller.DxGET(s,100);
+        }
 
         termSelected = -1;
 
@@ -325,6 +413,11 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             this.plus = plus;
         }
 
+        public Map Get(int position)
+        {
+            return data.get(position);
+        }
+
         public void Add(Map s)
         {
             data.add(s);
@@ -335,6 +428,10 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         {
             data.remove(s);
             isAdded.put(s,false);
+            if(addDetail.getTag().equals(s))
+            {
+                addDetail.setEnabled(true);
+            }
 
             notifyDataSetChanged();
 
@@ -371,24 +468,32 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             if(!plus)
             {
                 addTerm.setText("-");
+                child.setBackgroundColor(setWhite ? getResources().getColor(R.color.white) :
+                        getResources().getColor(R.color.light_blue));
             }
             else {
+                if(t.get("POST_COORD_LEX_FLAG").equals("3"))
+                {
+                    addTerm.setText("v");
+                }
+
                 if (!isAdded.containsKey(t)) {
                     isAdded.put(t, false);
                 }
                 if (isAdded.get(t)) {
-                    child.setBackgroundColor(getResources().getColor(R.color.green));
+                    child.setBackgroundColor(getResources().getColor(R.color.light_green));
                     addTerm.setEnabled(false);
                 }
                 else {
-                    child.setBackgroundColor(getResources().getColor(R.color.white));
+                    child.setBackgroundColor(setWhite ? getResources().getColor(R.color.white) :
+                                                        getResources().getColor(R.color.light_blue));
                     addTerm.setEnabled(true);
                 }
                 if (termSelected == position) {
                     child.setBackgroundColor(getResources().getColor(R.color.highlighted_text_material_light));
                 }
             }
-
+            setWhite = !setWhite;
             return child;
         }
 

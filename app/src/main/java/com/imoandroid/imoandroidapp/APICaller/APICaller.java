@@ -32,7 +32,11 @@ public final class APICaller {
 	 * http://stackoverflow.com/questions/2793150/using-java-net-urlconnection-to-fire-and-handle-http-requests
 	 * */
 
-    static final String VOCABULARY_URL_PATH = "http://imoweb.azurewebsites.net/vocabulary/procedure";
+    static final String VOCABULARY_URL_PATH = "http://imoweb.azurewebsites.net/vocabulary/";
+
+    static final String DX = "problem";
+    static final String RX = "medication";
+    static final String TX = "procedure";
    // static final String CHARSET = java.nio.charset.StandardCharsets.UTF_8.name();
     static final String CHARSET = "UTF-8";
 
@@ -110,13 +114,25 @@ public final class APICaller {
         return null;
     }
 
-    public static ArrayList<Map> vocabularyGET(final String queryWord, final int limit){
+    public static ArrayList<Map> DxGET(final String queryWord, final int limit){
+        return vocabularyGET(queryWord,limit,DX);
+    }
+
+    public static ArrayList<Map> RxGET(final String queryWord, final int limit){
+        return vocabularyGET(queryWord,limit,RX);
+    }
+
+    public static ArrayList<Map> TxGET(final String queryWord, final int limit){
+        return vocabularyGET(queryWord,limit,TX);
+    }
+
+    public static ArrayList<Map> vocabularyGET(final String queryWord, final int limit, String type){
         try {
             String[]params = {"query", "limit", "apiKey"};
             String[]values = {"*" + queryWord + "*",Integer.toString(limit), API_KEY};
             String query = queryBuilder(params, values);
 
-            Map<String, Object> jsonMap = slurp(VOCABULARY_URL_PATH, query);
+            Map<String, Object> jsonMap = slurp(VOCABULARY_URL_PATH+type, query);
             Map a = (Map) jsonMap.get("data");
 
             ArrayList<Map> obj = (ArrayList<Map>) a.get("items");
