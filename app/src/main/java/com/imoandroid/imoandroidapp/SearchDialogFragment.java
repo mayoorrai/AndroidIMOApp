@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Point;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,6 +29,7 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +37,9 @@ import com.imoandroid.imoandroidapp.APICaller.APICaller;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
@@ -43,12 +48,17 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
     private int mTab;
 
-    String[] listItems = {};
+    Map[] listItems = {};
 
     long time;
     int tally;
     private int width;
     boolean frameDisplayed;
+    // hacky
+    private HashMap<Map,Boolean> isAdded = new HashMap<Map,Boolean>();
+    private int rl;
+    private long chartInterval = 0;
+    private int termSelected = -1;
 
     private ListView lvResults;
     private ListView lvChart;
@@ -115,6 +125,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         clear.setVisibility(View.GONE);
         submit = (Button) v.findViewById(R.id.bDoSearch);
         submit.setClickable(false);
+        submit.setEnabled(false);
         lvResults = (ListView) v.findViewById(R.id.lvResults);
         lvChart = (ListView) v.findViewById(R.id.lvChart);
 
@@ -153,6 +164,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                 boolean exists = s.length() > 0;
                 clear.setVisibility(exists? View.VISIBLE:View.GONE);
                 submit.setClickable(exists);
+                submit.setEnabled(exists);
                 if (s.length() < 2) {
                     return;
                 }
@@ -176,19 +188,8 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                 }
 
                 tally=0;
-                //make api call and get list of objects
-                //update list view
-                APICall(s.toString());
-                /**
-                String[] APIResults = APICaller.vocabularyGET(s.toString(), 100);
-                ArrayList<String> arrayList = new ArrayList<String>();
-                for (int i = 0; i < APIResults.length; i++) {
-                    arrayList.add(APIResults[i]);
-                }
-                listAdapterAPIResults = new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_1, arrayList);
 
-                lvResults.setAdapter(listAdapterAPIResults);**/
+                APICall(s.toString());
             }
 
             @Override
@@ -202,36 +203,13 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        dismiss();
+        closeKeyboard();
 
-        final FragmentActivity fa = getActivity();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(listAdapterAPIResults.getItem(position))
-                .setMessage("Pick an Option");
-
-        builder.setNeutralButton("Narrow Term Result", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(fa, "Narrow Term Result", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setPositiveButton("Term Detail", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Toast.makeText(fa, "Term Detail", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-
+        listAdapter.setSelected(position);
+        // update term details
     }
+
+
 
     @Override
     public void onClick(View v)
@@ -243,29 +221,44 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         }
         else if (v==submit)
         {
+            closeKeyboard();
             APICall(et.getText().toString());
         }
-        else if (b.getTag() instanceof String)
+        else if (b.getTag() instanceof Map)
         {
+            closeKeyboard();
             displayFrame();
+            if (chartInterval == 0) {
+                chartInterval = System.currentTimeMillis();
+            }
+            else {
+                long diff = System.currentTimeMillis() - chartInterval;
+                if (diff < 150) {
+                    return;
+                }
+                chartInterval += diff;
+            }
 
             if (b.getText().equals("+")) {
                 //add term to chart
                 Log.v("as","as");
 
-                chartAdapter.Add((String) v.getTag());
+                listAdapter.setAdded((Map) v.getTag());
+                chartAdapter.Add((Map) v.getTag());
 
-                Toast.makeText(getActivity().getApplicationContext(), "Added \"" + (String) v.getTag()
+                Toast.makeText(getActivity().getApplicationContext(), "Added \"" + (String) ((Map) v.getTag()).get("code")
                         + "\" to chart"
-                        , Toast.LENGTH_LONG).show();
+                        , Toast.LENGTH_SHORT).show();
             }
             else
             {
-                chartAdapter.Delete((String) b.getTag());
+                listAdapter.setRemoved(chartAdapter.Delete((Map) b.getTag()));
 
-                Toast.makeText(getActivity().getApplicationContext(), "Removed \"" + (String) v.getTag()
+
+
+                Toast.makeText(getActivity().getApplicationContext(), "Removed \"" + (String) ((Map)v.getTag()).get("code")
                         + "\" from chart"
-                        , Toast.LENGTH_LONG).show();
+                        , Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -291,23 +284,23 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     //TODO: Add check for type of search (proc vs diagnosis vs prescription)
     private void APICall(String s)
     {
-        String[] APIResults = APICaller.vocabularyGET(s, 100);
-        //ArrayList<String> arrayList = new ArrayList<String>();
-        //for (int i = 0; i < APIResults.length; i++) {
-        //    arrayList.add(APIResults[i]);
-        //}
-        //listAdapterAPIResults = new DisplayTermAdapter(
-               // getActivity().getApplicationContext(),
-                //R.layout.activity_term_holder,
-                //arrayList,true);
-        listAdapter.UpdateData(getArrayList(APIResults));
+        ArrayList<Map> APIResults = APICaller.vocabularyGET(s, 100);
 
-        //lvResults.setAdapter(listAdapterAPIResults);
+        termSelected = -1;
+
+        listAdapter.UpdateData(APIResults);
     }
 
-    public ArrayList<String> getArrayList(String [] data)
+    public void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isAcceptingText()) {
+            imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+        }
+    }
+
+    public ArrayList<Map> getArrayList(Map [] data)
     {
-        ArrayList<String> ret = new ArrayList<String>();
+        ArrayList<Map> ret = new ArrayList<Map>();
         for(int i=0;i<data.length;i++)
         {
             ret.add(data[i]);
@@ -315,14 +308,14 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         return ret;
     }
 
-    public class DisplayTermAdapter extends ArrayAdapter<String> {
+    public class DisplayTermAdapter extends ArrayAdapter<Map> {
         Context mContext;
         int layoutResourceID;
-        ArrayList<String> data = new ArrayList<String>();
+        ArrayList<Map> data = new ArrayList<Map>();
         boolean plus;
 
         // Adapter Constructor
-        public DisplayTermAdapter(Context mContext, int layoutResourceID, ArrayList<String> data,
+        public DisplayTermAdapter(Context mContext, int layoutResourceID, ArrayList<Map> data,
                                   boolean plus) {
             super(mContext, layoutResourceID, data);
 
@@ -332,20 +325,23 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             this.plus = plus;
         }
 
-        public void Add(String s)
+        public void Add(Map s)
         {
             data.add(s);
             notifyDataSetChanged();
         }
 
-        public void Delete(String s)
+        public Map Delete(Map s)
         {
             data.remove(s);
+            isAdded.put(s,false);
 
             notifyDataSetChanged();
+
+            return s;
         }
 
-        public void UpdateData(ArrayList<String> newData)
+        public void UpdateData(ArrayList<Map> newData)
         {
             data.clear();
             for (int i=0;i<newData.size();i++)
@@ -363,23 +359,57 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
             if (child == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 child = inflater.inflate(layoutResourceID, parent, false);
-                term = (TextView) child.findViewById(R.id.termTitle);
-                child.setTag(term);
             }
-            else {
-                term = (TextView) child.getTag();
-            }
+            term = (TextView) child.findViewById(R.id.termTitle);
             addTerm = (Button) child.findViewById(R.id.addTermButton);
-            String t = data.get(position);
+            Map t = data.get(position);
+            child.setTag(t);
             term.setTag(t);
-            term.setText(t);
+            term.setText((String) t.get("title"));
             addTerm.setTag(t);
             addTerm.setOnClickListener(SearchDialogFragment.this);
             if(!plus)
             {
                 addTerm.setText("-");
             }
+            else {
+                if (!isAdded.containsKey(t)) {
+                    isAdded.put(t, false);
+                }
+                if (isAdded.get(t)) {
+                    child.setBackgroundColor(getResources().getColor(R.color.green));
+                    addTerm.setEnabled(false);
+                }
+                else {
+                    child.setBackgroundColor(getResources().getColor(R.color.white));
+                    addTerm.setEnabled(true);
+                }
+                if (termSelected == position) {
+                    child.setBackgroundColor(getResources().getColor(R.color.highlighted_text_material_light));
+                }
+            }
+
             return child;
+        }
+
+        public void setAdded(Map item) {
+            isAdded.put(item, true);
+
+            notifyDataSetChanged();
+        }
+
+        public void setRemoved(Map item) {
+            if(isAdded.containsKey(item)) {
+                isAdded.put(item, false);
+
+                notifyDataSetChanged();
+            }
+        }
+
+        public void setSelected(int position) {
+            termSelected = position;
+
+            notifyDataSetChanged();
         }
     }
 
