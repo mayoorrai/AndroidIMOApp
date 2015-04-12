@@ -92,17 +92,22 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
-        Patient newPatient = new Patient();
-        newPatient.firstName = "Nam";
-        newPatient.lastName = "Prabhu";
+       /* Patient newPatient = new Patient();
+        Demographics d1 = new Demographics();
+        d1.firstName = "Nam";
+        d1.lastName = "Prabhu";
+        newPatient.demo = d1;
 
         Patient newPatient2 = new Patient();
-        newPatient2.firstName = "Vishal";
-        newPatient2.lastName = "Pir";
+        Demographics d2 = new Demographics();
+        d2.firstName = "Vishal";
+        d2.lastName = "Pir";
+        newPatient2.demo = d2;
 
         allPatients.add(newPatient);
-        allPatients.add(newPatient2);
-
+        allPatients.add(newPatient2);*/
+        PatientParser p = new PatientParser();
+        allPatients = p.parsePatients();
 
         tempPatients = new ArrayList<Patient>(allPatients);
 
@@ -155,7 +160,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 List<Patient> searchPatients = new ArrayList<Patient>();
                 for(int i = 0 ; i < allPatients.size() ; i++){
                     Patient p = allPatients.get(i);
-                    if(p.firstName.toLowerCase().contains(s) || p.lastName.toLowerCase().contains(s)) {
+                    if(p.demo.firstName.toLowerCase().contains(s) || p.demo.lastName.toLowerCase().contains(s)) {
                         searchPatients.add(p);
                     }
                 }
