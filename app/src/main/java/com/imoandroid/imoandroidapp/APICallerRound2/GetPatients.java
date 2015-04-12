@@ -33,8 +33,6 @@ public class GetPatients extends AsyncTask<String, Integer, HttpResponse<JsonNod
     protected void onProgressUpdate(Integer...integers) {
     }
     protected void onPostExecute(HttpResponse<JsonNode> response) {
-        String answer = response.getBody().toString();
-//        TextView txtView = (TextView) findViewById(R.id.textView1);
-//        txtView.setText(answer);
+
     }
 }

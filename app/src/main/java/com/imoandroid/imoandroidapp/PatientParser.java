@@ -21,7 +21,7 @@ public class PatientParser {
 
     public final String TAG = PatientParser.class.getSimpleName();
 
-    public ArrayList<Patient> parsePatients(){
+    public ArrayList<Patient> parsePatients(String responseData){
 
         int responseCode = -1;
         char[] inputBuffer = new char[256];
@@ -31,20 +31,20 @@ public class PatientParser {
         ArrayList<Patient> allPatients = new ArrayList<Patient>();
 
         try {
-            URL patientsURL = new URL("http://66.252.70.193/patients?apiKey=QhIno484vsazggxvZgf2EGZjkYunH24f7MNz5JXmI83bDMTOgmwVw6eqss7I18U7");
-            HttpURLConnection connection = (HttpURLConnection) patientsURL.openConnection();
-            connection.connect();
+//            URL patientsURL = new URL("http://66.252.70.193/patients?apiKey=QhIno484vsazggxvZgf2EGZjkYunH24f7MNz5JXmI83bDMTOgmwVw6eqss7I18U7");
+//            HttpURLConnection connection = (HttpURLConnection) patientsURL.openConnection();
+//            connection.connect();
+//
+//            responseCode = connection.getResponseCode();
+//            // if responseCode == 200, download data
+//
+//            if (responseCode == HttpURLConnection.HTTP_OK) {
+//
+//                InputStream inputStream = connection.getInputStream();
+//
+//                String responseData = slurp(inputStream, inputBuffer);
 
-            responseCode = connection.getResponseCode();
-            // if responseCode == 200, download data
-
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-
-                InputStream inputStream = connection.getInputStream();
-
-                String responseData = slurp(inputStream, inputBuffer);
-
-                System.out.println(responseData);
+                //System.out.println(responseData);
 
                 jsonPatients = new JSONObject(responseData);
                 jsonPatientArray = jsonPatients.getJSONArray("Patients");
@@ -62,7 +62,7 @@ public class PatientParser {
                     allPatients.add(p);
                 }
 
-            }
+           // }
 
 
         }
@@ -260,7 +260,7 @@ public class PatientParser {
     public static void main(String [] args){
         PatientParser p = new PatientParser();
 
-        p.parsePatients();
+//        p.parsePatients("");
     }
 
     protected String slurp(InputStream is, char[] buffer) throws IOException {
