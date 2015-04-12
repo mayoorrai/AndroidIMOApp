@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,10 +31,14 @@ import android.widget.ListView;
 import android.widget.TabWidget;
 import android.widget.Toast;
 
+import com.imoandroid.imoandroidapp.APICallerRound2.GetPatients;
+import com.mashape.unirest.http.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -106,8 +111,23 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         allPatients.add(newPatient);
         allPatients.add(newPatient2);*/
+
+        HttpResponse<JsonNode> patientData = null;
+
+        try {
+            patientData = new GetPatients().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        Log.v("NEWNEW--", patientData.getBody().toString());
+
         PatientParser p = new PatientParser();
-        allPatients = p.parsePatients();
+        allPatients = p.parsePatients(patientData.getBody().toString());
+
+        Log.v("###", allPatients.get(0).demo.getFirstName());
 
         tempPatients = new ArrayList<Patient>(allPatients);
 

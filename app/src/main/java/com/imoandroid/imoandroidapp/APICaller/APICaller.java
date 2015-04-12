@@ -17,14 +17,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class APICaller {
 
-
 	/*
 	 * Which library should we use btw Apache HTTP Client & HttpURLConnection?
 	 * - Seems like HttpULRConnection is the best choice for
 	 * phones on Gingerbread and above & uses less memory
 	 *
 	 * http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-	 *
 	 * */
 
 	/*
