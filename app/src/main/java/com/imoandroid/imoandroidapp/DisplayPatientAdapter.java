@@ -41,7 +41,7 @@ public class DisplayPatientAdapter extends ArrayAdapter<Patient> {
         }
         Patient p = data.get(position);
         pat.setTag(p);
-        pat.setText(p.getFirstName() + " " + p.getLastName());
+        pat.setText(p.demo.getFirstName() + " " + p.demo.getLastName());
 
         return child;
     }
