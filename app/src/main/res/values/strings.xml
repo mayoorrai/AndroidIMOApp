@@ -7,6 +7,7 @@
     // Actions            <string name="strFinish">Finish</string>
     //// Create New Patient Vars
     // Basic Patient Details            <string name="strBasicPatientDetails">Basic Patient Details</string>
+    <string name="strFullName">Patient Name</string>
     <string name="strFirstName">First Name</string>
     <string name="strLastName">Last Name</string>
     <string name="strGender">Gender</string>

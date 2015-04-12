@@ -1,0 +1,76 @@
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        tools:context="com.imoandroid.imoandroidapp.FoundationActivity$PlaceholderFragment"
+        xmlns:tools="http://schemas.android.com/tools"
+        style="@style/MainScreen"
+        >
+
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+        <TextView
+                android:id="@+id/fragment_patientName"
+                android:text="@string/strFullName"
+                style="@style/PatientName"/>
+
+        <TextView
+                android:id="@+id/fragment_patientID"
+                android:text="@string/strPatientID"
+                style="@style/PatientDetails"/>
+
+        <TextView
+                android:id="@+id/fragment_patientDOB"
+                android:text="@string/strDOB"
+                style="@style/PatientDetails"/>
+
+        <TextView
+                android:id="@+id/fragment_patientLocation"
+                android:text="@string/strPrimaryAddress"
+                style="@style/PatientDetails"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/buttonRow"
+            style="@style/ButtonRow">
+
+
+        <Button
+                android:id="@+id/btnSort"
+                android:text="Sort"
+                style="@style/TabButton"/>
+
+        <Button
+                android:id="@+id/btnAdd"
+                android:text="Add"
+                style="@style/TabButton"
+                />
+
+        <Button
+                android:id="@+id/btnRemove"
+                android:text="Remove"
+                style="@style/TabButton"/>
+
+        <Button
+                android:id="@+id/btnEdit"
+                android:text="Edit"
+                style="@style/TabButton"/>
+
+        <Button
+                android:id="@+id/btnSave"
+                android:text="Save"
+                style="@style/TabButton"/>
+
+        <Button
+                android:id="@+id/btnBilling"
+                android:text="Send to Billing"
+                style="@style/TabButton"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

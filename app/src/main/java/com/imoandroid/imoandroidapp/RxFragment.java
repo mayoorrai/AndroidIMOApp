@@ -22,10 +22,10 @@ public class RxFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_foundation, container, false);
-        TextView tv = (TextView) v.findViewById(R.id.fragment_textView);
-        Button btnSearch = (Button) v.findViewById(R.id.btnSearch);
-        tv.setText(this.getTag() + " Content");
+        View v = inflater.inflate(R.layout.fragment_rx, container, false);
+        //TextView tv = (TextView) v.findViewById(R.id.fragment_textView);
+        Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
+        //tv.setText(this.getTag() + " Content");
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
