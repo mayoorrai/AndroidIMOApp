@@ -182,7 +182,7 @@ getActionBar().setHomeButtonEnabled(true);
     private void getPatientNames() {
         navDrawerPatientNames = new ArrayList<String>();
         for (int i = 0; i < patientList.size(); i++) {
-            navDrawerPatientNames.add(patientList.get(i).demo.getFullName());
+            navDrawerPatientNames.add(patientList.get(i).getDemo().getFullName());
         }
     }
 
@@ -240,20 +240,20 @@ getActionBar().setHomeButtonEnabled(true);
         else {
             // update patient (nonempty fields)
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra(Constants.TAG_FIRST_NAME, p.demo.getFirstName());
-            intent.putExtra(Constants.TAG_LAST_NAME, p.demo.getLastName());
-            intent.putExtra(Constants.TAG_GENDER, p.demo.get_gender().getNum());
-            intent.putExtra(Constants.TAG_DOB, p.demo.getDOB().getTime());
-            intent.putExtra(Constants.TAG_ADDRESS1, p.demo.address.getAddress1());
-            intent.putExtra(Constants.TAG_ADDRESS2, p.demo.address.getAddress2());
-            intent.putExtra(Constants.TAG_ADDRESS2, p.demo.address.getAddress2());
-            intent.putExtra(Constants.TAG_CITY, p.demo.address.getCity());
-            intent.putExtra(Constants.TAG_LANGUAGE, p.demo.getLanguage());
-            intent.putExtra(Constants.TAG_STATE, p.demo.address.getState());
-            intent.putExtra(Constants.TAG_MOBILE, p.demo.address.getMobilePhone());
-            intent.putExtra(Constants.TAG_HOME, p.demo.address.getHomePhone());
-            intent.putExtra(Constants.TAG_OFFICE, p.demo.address.getOfficePhone());
-            intent.putExtra(Constants.TAG_NOTES, p.demo.getNotes());
+            intent.putExtra(Constants.TAG_FIRST_NAME, p.getDemo().getFirstName());
+            intent.putExtra(Constants.TAG_LAST_NAME, p.getDemo().getLastName());
+            intent.putExtra(Constants.TAG_GENDER, p.getDemo().get_gender().getNum());
+            intent.putExtra(Constants.TAG_DOB, p.getDemo().getDOB().getTime());
+            intent.putExtra(Constants.TAG_ADDRESS1, p.getDemo().address.getAddress1());
+            intent.putExtra(Constants.TAG_ADDRESS2, p.getDemo().address.getAddress2());
+            intent.putExtra(Constants.TAG_ADDRESS2, p.getDemo().address.getAddress2());
+            intent.putExtra(Constants.TAG_CITY, p.getDemo().address.getCity());
+            intent.putExtra(Constants.TAG_LANGUAGE, p.getDemo().getLanguage());
+            intent.putExtra(Constants.TAG_STATE, p.getDemo().address.getState());
+            intent.putExtra(Constants.TAG_MOBILE, p.getDemo().address.getMobilePhone());
+            intent.putExtra(Constants.TAG_HOME, p.getDemo().address.getHomePhone());
+            intent.putExtra(Constants.TAG_OFFICE, p.getDemo().address.getOfficePhone());
+            intent.putExtra(Constants.TAG_NOTES, p.getDemo().getNotes());
             intent.putExtra("create", false);
             startActivity(intent);
         }
@@ -291,21 +291,21 @@ getActionBar().setHomeButtonEnabled(true);
                         JSONObject jsonAddressDeets = o.getJSONObject(Constants.TAG_ADDRESS);
 
                         Patient curr = new Patient();
-                        curr.demo.setFirstName(o.getString(Constants.TAG_FIRST_NAME));
-                        curr.demo.setLastName(o.getString(Constants.TAG_LAST_NAME));
-                        curr.demo.setDOB(new Date(o.getLong(Constants.TAG_DOB)));
+                        curr.getDemo().setFirstName(o.getString(Constants.TAG_FIRST_NAME));
+                        curr.getDemo().setLastName(o.getString(Constants.TAG_LAST_NAME));
+                        curr.getDemo().setDOB(o.getLong(Constants.TAG_DOB));
                         String g = o.getString(Constants.TAG_GENDER);
                         if (g.equals("m")) {
-                            curr.demo.set_gender(Demographics.Gender.M);
+                            curr.getDemo().set_gender(Demographics.Gender.M);
                         }
                         else if (g.equals("f")) {
-                            curr.demo.set_gender(Demographics.Gender.F);
+                            curr.getDemo().set_gender(Demographics.Gender.F);
                         }
                         else {
-                            curr.demo.set_gender(Demographics.Gender.Other);
+                            curr.getDemo().set_gender(Demographics.Gender.Other);
                         }
-                        curr.demo.setLanguage(o.getString(Constants.TAG_LANGUAGE));
-                        curr.demo.setNotes(o.getString(Constants.TAG_NOTES));
+                        curr.getDemo().setLanguage(o.getString(Constants.TAG_LANGUAGE));
+                        curr.getDemo().setNotes(o.getString(Constants.TAG_NOTES));
                         // New Address Object
                         PatientAddress currPatientAddress = new PatientAddress();
                         // JSON: Address Details
@@ -316,9 +316,9 @@ getActionBar().setHomeButtonEnabled(true);
                         currPatientAddress.setMobilePhone(jsonAddressDeets.getLong(Constants.TAG_MOBILE));
                         currPatientAddress.setHomePhone(jsonAddressDeets.getLong(Constants.TAG_HOME));
                         currPatientAddress.setOfficePhone(jsonAddressDeets.getLong(Constants.TAG_OFFICE));
-                        currPatientAddress.setState(State.valueOf(jsonAddressDeets.getString(Constants.TAG_STATE).toUpperCase()));
-                        curr.demo.setAddress(currPatientAddress);
-                        Log.i("Test", curr.demo.getFirstName());
+                        currPatientAddress.setState(jsonAddressDeets.getString(Constants.TAG_STATE).toUpperCase());
+                        curr.getDemo().setAddress(currPatientAddress);
+                        Log.i("Test", curr.getDemo().getFirstName());
 
                         // Add curr to List
                         patientList.add(curr);

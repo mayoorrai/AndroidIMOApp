@@ -82,7 +82,7 @@
     <View
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:background="#DADADA"
+        android:background="#000"
         />
 
     <!-- Frames to display on right -->

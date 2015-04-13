@@ -1,15 +1,83 @@
 package com.imoandroid.imoandroidapp;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by namrataprabhu on 4/11/15.
  */
-public class Demographics {
+public class Demographics implements Parcelable{
 
     String firstName; //patient's first name
     String lastName; //the patient's last name
     int age; //the patient's age
+
+    public Demographics(){}
+
+    public Demographics(Demographics copy)
+    {
+        firstName = copy.getFirstName();
+        lastName = copy.getLastName();
+        age = copy.getAge();
+        _gender = copy.get_gender();
+        language = copy.getLanguage();
+        DOB = copy.getDOB();
+        id = copy.getId();
+        picture = copy.getPicture();
+        address = copy.getAddress();
+        notes = copy.getNotes();
+        insurance = copy.getInsurance();
+    }
+
+    public Demographics(Parcel in)
+    {
+        String [] vals = new String[5];
+
+        in.readStringArray(vals);
+        this.firstName = vals[0];
+        this.lastName = vals[1];
+        this.language = vals[2];
+        this.picture = vals[3];
+        this.notes = vals[4];
+        this.DOB = new Date(in.readLong());
+        this.id = in.readInt();
+        this.address = in.readParcelable(PatientAddress.class.getClassLoader());
+        this.insurance = in.readParcelable(Insurance.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Demographics> CREATOR
+            = new Parcelable.Creator<Demographics>() {
+        public Demographics createFromParcel(Parcel in) {
+            return new Demographics(in);
+        }
+
+        public Demographics[] newArray(int size) {
+            return new Demographics[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[]
+                {
+                        this.firstName,
+                        this.lastName,
+                        this.language,
+                        this.picture,
+                        this.notes
+                });
+        dest.writeLong(DOB.getTime());
+        dest.writeInt(id);
+        dest.writeParcelable(address,flags);
+        dest.writeParcelable(insurance,flags);
+    }
 
     public enum Gender {
         M(0),
@@ -96,6 +164,22 @@ public class Demographics {
         this._gender = _gender;
     }
 
+    public void set_gender(int id)
+    {
+        switch(id)
+        {
+            case 0:
+                _gender = Gender.M;
+                break;
+            case 1:
+                _gender = Gender.F;
+                break;
+            case 2:
+                _gender = Gender.Other;
+                break;
+        }
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -108,13 +192,27 @@ public class Demographics {
         return DOB;
     }
 
-    public void setDOB(Date DOB) {
-        this.DOB = DOB;
+    public void setDOB(long time) {
+        this.DOB = new Date(time);
     }
 
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 }

@@ -47,124 +47,75 @@ public class PatientParser {
                 //System.out.println(responseData);
 
                 jsonPatients = new JSONObject(responseData);
-                jsonPatientArray = jsonPatients.getJSONArray("Patients");
+                jsonPatientArray = jsonPatients.getJSONArray("patients");
 
                 for (int i = 0; i < jsonPatientArray.length(); i++) {
 
                     Patient p = new Patient();
-                    JSONObject patient = jsonPatientArray.getJSONObject(i);
-                    JSONObject getPatient = patient.getJSONObject("Patient");
-                    JSONObject demographics = getPatient.getJSONObject("Demographics");
-                    p.problems = setUpProblems(getPatient);
-                    p.medications = setUpMedications(getPatient);
-                    p.procedures = setUpProcedures(getPatient);
-                    p.demo = setUpDemographics(demographics);
+                    JSONObject getPatient = jsonPatientArray.getJSONObject(i);
+                    //JSONObject getPatient = patient.getJSONObject("Patient");
+                   // JSONObject demographics = getPatient.getJSONObject("Demographics");
+                    p.setProblems(setUpProblems(getPatient));
+                    p.setMedications(setUpMedications(getPatient));
+                    p.setProcedures(setUpProcedures(getPatient));
+                    p.setDemo(setUpDemographics(getPatient));
                     allPatients.add(p);
                 }
+
 
            // }
 
 
+
         }
             catch(Exception e){
-
-                e.printStackTrace();
-
+                return allPatients;
             }
 
     return allPatients;
 
     }
 
-    public ArrayList<Medication> setUpMedications(JSONObject getPatient){
+    public ArrayList<Term> setUpTerms(JSONObject getPatient, TermType type){
 
-        ArrayList<Medication> allMedications = new ArrayList<Medication>();
+        ArrayList<Term> allTerms = new ArrayList<Term>();
 
         try{
-            JSONArray medications = getPatient.getJSONArray("Medication");
+            JSONArray terms = getPatient.getJSONArray(type.toString());
 
-            for(int i = 0 ; i < medications.length() ; i++){
-                JSONObject medication = medications.getJSONObject(i);
+            for(int i = 0 ; i < terms.length() ; i++){
+                JSONObject term = terms.getJSONObject(i);
 
-                String interfaceSource = medication.getString("InterfaceSource");
-                String interfaceCode = medication.getString("InterfaceCode");
-                String interfaceTitle = medication.getString("InterfaceTitle");
-                String adminSource = medication.getString("AdminSource");
-                String adminCode = medication.getString("AdminCode");
-                String adminTitle = medication.getString("AdminTitle");
-                Medication newMedication = new Medication(interfaceSource , interfaceCode , interfaceTitle , adminSource , adminCode , adminTitle);
-                allMedications.add(newMedication);
+                String interfaceSource = term.getString("InterfaceSource");
+                String interfaceCode = term.getString("InterfaceCode");
+                String interfaceTitle = term.getString("InterfaceTitle");
+                String adminSource = term.getString("AdminSource");
+                String adminCode = term.getString("AdminCode");
+                String adminTitle = term.getString("AdminTitle");
+                Term newTerm = new Term(interfaceSource , interfaceCode , interfaceTitle , adminSource , adminCode , adminTitle);
+                allTerms.add(newTerm);
             }
 
         }
         catch(Exception e){
-
-            return allMedications;
-
+            return allTerms;
         }
 
-        return allMedications;
+        return allTerms;
     }
 
-    public ArrayList<Procedure> setUpProcedures(JSONObject getPatient){
+    public ArrayList<Term> setUpMedications(JSONObject getPatient){
 
-        ArrayList<Procedure> allProcedures = new ArrayList<Procedure>();
-
-        try{
-
-            JSONArray procedures = getPatient.getJSONArray("Procedure");
-
-            for(int i = 0 ; i < procedures.length() ; i++){
-                JSONObject procedure = procedures.getJSONObject(i);
-
-                String interfaceSource = procedure.getString("InterfaceSource");
-                String interfaceCode = procedure.getString("InterfaceCode");
-                String interfaceTitle = procedure.getString("InterfaceTitle");
-                String adminSource = procedure.getString("AdminSource");
-                String adminCode = procedure.getString("AdminCode");
-                String adminTitle = procedure.getString("AdminTitle");
-                Procedure newProcedure = new Procedure(interfaceSource , interfaceCode , interfaceTitle , adminSource , adminCode , adminTitle);
-                allProcedures.add(newProcedure);
-            }
-
-        }
-        catch(Exception e){
-
-            return allProcedures;
-
-        }
-
-        return allProcedures;
+        return setUpTerms(getPatient,TermType.Medication);
     }
 
-    public ArrayList<Problem> setUpProblems(JSONObject getPatient){
+    public ArrayList<Term> setUpProcedures(JSONObject getPatient){
 
+        return setUpTerms(getPatient,TermType.Procedure);
+    }
 
-        ArrayList<Problem> allProblems = new ArrayList<Problem>();
-
-        try{
-            JSONArray problems = getPatient.getJSONArray("Problem");
-            for(int i = 0 ; i < problems.length() ; i++){
-                JSONObject problem = problems.getJSONObject(i);
-
-                String interfaceSource = problem.getString("InterfaceSource");
-                String interfaceCode = problem.getString("InterfaceCode");
-                String interfaceTitle = problem.getString("InterfaceTitle");
-                String adminSource = problem.getString("AdminSource");
-                String adminCode = problem.getString("AdminCode");
-                String adminTitle = problem.getString("AdminTitle");
-                Problem newProblem = new Problem(interfaceSource , interfaceCode , interfaceTitle , adminSource , adminCode , adminTitle);
-                allProblems.add(newProblem);
-            }
-
-        }
-        catch(Exception e){
-
-            return allProblems;
-
-        }
-
-        return allProblems;
+    public ArrayList<Term> setUpProblems(JSONObject getPatient){
+        return setUpTerms(getPatient,TermType.Problem);
     }
 
     public Insurance setUpInsurance(JSONObject demographics){
@@ -186,7 +137,7 @@ public class PatientParser {
         }
 
             catch(Exception e){
-            return null;
+            return new Insurance();
         }
 
         return insurance1;
@@ -196,13 +147,12 @@ public class PatientParser {
         PatientAddress newAddress = new PatientAddress();
 
         try{
-
             JSONObject address = demographics.getJSONObject("Address");
 
                 newAddress.setAddress1(address.getString("address1"));
                 newAddress.setAddress2(address.getString("address2"));
                 newAddress.setCity(address.getString("city"));
-                //finish STATE
+                newAddress.setState(address.getString("state"));
                 newAddress.setZip(Integer.parseInt(address.getString("zip")));
                 newAddress.setHomePhone(Long.parseLong(address.getString("home")));
                 newAddress.setMobilePhone(Long.parseLong(address.getString("mobile")));
@@ -210,7 +160,7 @@ public class PatientParser {
 
 
         } catch(Exception e){
-            return null;
+            return new PatientAddress();
         }
 
         return newAddress;
@@ -220,9 +170,9 @@ public class PatientParser {
 
         Demographics d = new Demographics();
         try {
-            String lastName = demographics.getString("LastName");
-            String firstName = demographics.getString("FirstName");
-            String age = demographics.getString("Age");
+            String lastName = demographics.getString("last_name");
+            String firstName = demographics.getString("first_name");
+           /* String age = demographics.getString("Age");
             String language = demographics.getString("Language");
             String gender = demographics.getString("Gender");
 
@@ -242,19 +192,17 @@ public class PatientParser {
                 d.set_gender(Demographics.Gender.Other);
             }
             d.setLanguage(language);
-            d.setAge(Integer.parseInt(age));
+            d.setAge(Integer.parseInt(age));*/
             d.setFirstName(firstName);
             d.setLastName(lastName);
 
         }
         catch(Exception e){
 
-            e.printStackTrace();
+            return d;
 
         }
-
         return d;
-
     }
 
     public static void main(String [] args){
