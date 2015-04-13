@@ -54,7 +54,6 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     int tally;
     private int width;
     boolean frameDisplayed;
-    boolean setWhite = true;
     // hacky
     private HashMap<Map,Boolean> isAdded = new HashMap<Map,Boolean>();
     private int rl;
@@ -453,6 +452,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         public View getView(int position, View child, ViewGroup parent) {
             TextView term;
             Button addTerm;
+            boolean setWhite = position % 2 != 0;
             if (child == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 child = inflater.inflate(layoutResourceID, parent, false);
@@ -472,7 +472,8 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                         getResources().getColor(R.color.light_blue));
             }
             else {
-                if(t.get("POST_COORD_LEX_FLAG").equals("3"))
+                Object narrow = t.get("POST_COORD_LEX_FLAG");
+                if(narrow != null && narrow.equals("3"))
                 {
                     addTerm.setText("v");
                 }

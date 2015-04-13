@@ -1,5 +1,6 @@
 package com.imoandroid.imoandroidapp;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -64,6 +66,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
+    private Button createButton;
     private ListView mDrawerListView;
     private EditText patientSearch;
     private View mFragmentContainerView;
@@ -139,6 +142,8 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
         mDrawerListView = (ListView) v.findViewById(R.id.patientLV);
         patientSearch = (EditText) v.findViewById(R.id.etPatients);
+        createButton = (Button) v.findViewById(R.id.addPatientButton);
+        createButton.setOnClickListener(this);
         clear = (ImageButton)v.findViewById(R.id.clearPat);
         clear.setVisibility(View.GONE);
         clear.setOnClickListener(this);
@@ -160,7 +165,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 List<Patient> searchPatients = new ArrayList<Patient>();
                 for(int i = 0 ; i < allPatients.size() ; i++){
                     Patient p = allPatients.get(i);
-                    if(p.demo.firstName.toLowerCase().contains(s) || p.demo.lastName.toLowerCase().contains(s)) {
+                    if(p.getDemo().firstName.toLowerCase().contains(s) || p.getDemo().lastName.toLowerCase().contains(s)) {
                         searchPatients.add(p);
                     }
                 }
@@ -353,6 +358,34 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         if(v==clear)
         {
             patientSearch.setText("");
+        }
+        else if(v==createButton)
+        {
+            Intent i = new Intent(getActivity(),PatientInputForm.class);
+            i.putExtra("create",true);
+            startActivityForResult(i,1);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode,resultCode,data);
+
+        if(requestCode==1)
+        {
+            if(resultCode==Constants.RESULT_OK)
+            {
+                Patient created = data.getParcelableExtra("patient");
+
+                Toast.makeText(getActivity(),created.getDemo().getFullName()+ " created",Toast.LENGTH_SHORT).show();
+
+                //Add patient to TabHost selected
+            }
+            else if( resultCode == Constants.RESULT_CANCEL)
+            {
+                Toast.makeText(getActivity(),"Did not create patient",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
