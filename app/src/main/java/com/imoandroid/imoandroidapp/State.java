@@ -69,10 +69,9 @@ public enum State {
      *
      * @param abbr the state's abbreviation.
      * @return the enum constant with the specified abbreviation.
-     * @throws SunlightException if the abbreviation is invalid.
      */
     public static State valueOfAbbreviation(final String abbr) {
-        final State state = STATES_BY_ABBR.get(abbr);
+        final State state = STATES_BY_ABBR.get(abbr.toUpperCase());
         if (state != null) {
             return state;
         } else {
@@ -87,6 +86,12 @@ public enum State {
         } catch (final IllegalArgumentException e) {
             return State.UNKNOWN;
         }
+    }
+
+    public static State valueOfNameOrAbbr(final String in)
+    {
+        State ret = valueOfName(in);
+        return ret == State.UNKNOWN ? valueOfAbbreviation(in) : ret;
     }
 
     @Override

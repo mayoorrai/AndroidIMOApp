@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,7 @@ public class PatientInputForm extends ActionBarActivity {
     TextView age;
     Button submit;
     long datePicked;
+    boolean creating;
     SimpleDateFormat sdf;
 
     @Override
@@ -62,7 +64,8 @@ public class PatientInputForm extends ActionBarActivity {
         setContentView(R.layout.create_new_patient);
         assignFields();
         Intent intent = getIntent();
-        if (intent.getBooleanExtra("create", true) == false) {
+        creating = intent.getBooleanExtra("create", true);
+        if (!creating) {
             etfirstName.setText(intent.getStringExtra(Constants.TAG_FIRST_NAME));
             etlastName.setText(intent.getStringExtra(Constants.TAG_LAST_NAME));
             etlanguage.setText(intent.getStringExtra(Constants.TAG_LANGUAGE));
@@ -227,6 +230,49 @@ public class PatientInputForm extends ActionBarActivity {
 
         if(allGood)
         {
+            Demographics demo = new Demographics();
+            demo.setFirstName(etfirstName.getText().toString());
+            demo.setLastName(etlastName.getText().toString());
+            demo.set_gender(etgender.getSelectedItemPosition());
+            demo.setLanguage(etlanguage.getText().toString());
+            demo.setDOB(datePicked);
+
+            PatientAddress address = new PatientAddress();
+            address.setAddress1(etaddress1.getText().toString());
+            address.setAddress2(etaddress2.getText().toString());
+            address.setCity(etcity.getText().toString());
+            address.setState(etstate.getText().toString());
+            address.setZip(Integer.parseInt(etzip.getText().toString()));
+            String num = etmobile.getText().toString();
+            if(!num.isEmpty())
+            {
+                address.setMobilePhone(Long.parseLong(num));
+            }
+            num = ethome.getText().toString();
+            if(!num.isEmpty())
+            {
+                address.setHomePhone(Long.parseLong(num));
+            }
+            num = etoffice.getText().toString();
+            if(!num.isEmpty())
+            {
+                address.setOfficePhone(Long.parseLong(num));
+            }
+            demo.setAddress(address);
+            demo.setNotes(etnotes.getText().toString());
+
+            Patient ret = new Patient(demo);
+
+            Intent response = new Intent();
+            response.putExtra("patient",ret);
+
+            setResult(Constants.RESULT_OK,response);
+
+            //TODO: Post patient and retrieve ID
+
+            finish();
+
+            /**
             //make JSON patient, then API call, then go to Tab Layout
             JSONObject patient = new JSONObject();
             try {
@@ -288,24 +334,8 @@ public class PatientInputForm extends ActionBarActivity {
                     })
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .show();
-            /**
-            HttpClient httpClient = new DefaultHttpClient();
 
-            //TODO: ask Web Team about how to use api key...
-            try {
-                HttpPost request = new HttpPost(Constants.URL+"patients");
-                StringEntity params =new StringEntity("value=" + patient.toString());
-                request.addHeader("content-type", "application/json");
-                request.addHeader("Accept","application/json");
-                request.setEntity(params);
-                HttpResponse response = httpClient.execute(request);
-
-                // handle response here... go to tablayout
-            }catch (Exception ex) {
-                // handle exception here
-            } finally {
-                httpClient.getConnectionManager().shutdown();
-            }**/
+            **/
         }
         else
         {
@@ -320,6 +350,12 @@ public class PatientInputForm extends ActionBarActivity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(Constants.RESULT_CANCEL);
+        finish();
     }
 }
 

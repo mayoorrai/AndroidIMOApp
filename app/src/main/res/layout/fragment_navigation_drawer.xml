@@ -3,7 +3,15 @@
       android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
+    android:background="@color/imo_button"
     tools:context="com.imoandroid.imoandroidapp.NavigationDrawerFragment">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addPatientButton"
+        android:text="Add New Patient"
+        android:layout_margin="3dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,6 +47,6 @@
     android:id="@+id/patientLV"
     android:layout_height="match_parent" android:choiceMode="singleChoice"
     android:divider="@android:color/transparent" android:dividerHeight="0dp"
-    android:background="#cccc" />
+    android:background="@color/imo_tint" />
 
 </LinearLayout>

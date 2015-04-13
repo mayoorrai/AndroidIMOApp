@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by namrataprabhu on 4/11/15.
+ * Created by Vishal on 4/12/2015.
  */
-public class Problem implements Parcelable{
+public class Term implements Parcelable {
 
     public String InterfaceSource;
     public String InterfaceCode;
@@ -15,11 +15,11 @@ public class Problem implements Parcelable{
     public String AdminCode;
     public String AdminTitle;
 
-    public Problem(){
+    public Term(){
 
     }
 
-    public Problem(Parcel in)
+    public Term(Parcel in)
     {
         String [] data = new String[6];
 
@@ -32,7 +32,7 @@ public class Problem implements Parcelable{
         this.AdminTitle = data[5];
     }
 
-    public Problem(String interfaceSource , String interfaceCode , String interfaceTitle , String adminSource , String adminCode , String adminTitle){
+    public Term(String interfaceSource , String interfaceCode , String interfaceTitle , String adminSource , String adminCode , String adminTitle){
         this.InterfaceSource = interfaceSource;
         this.InterfaceCode = interfaceCode;
         this.InterfaceTitle = interfaceTitle;
@@ -41,14 +41,14 @@ public class Problem implements Parcelable{
         this.AdminTitle = adminTitle;
     }
 
-    public static final Parcelable.Creator<Problem> CREATOR
-            = new Parcelable.Creator<Problem>() {
-        public Problem createFromParcel(Parcel in) {
-            return new Problem(in);
+    public static final Parcelable.Creator<Term> CREATOR
+            = new Parcelable.Creator<Term>() {
+        public Term createFromParcel(Parcel in) {
+            return new Term(in);
         }
 
-        public Problem[] newArray(int size) {
-            return new Problem[size];
+        public Term[] newArray(int size) {
+            return new Term[size];
         }
     };
 
