@@ -27,7 +27,9 @@ public class Constants {
     public static final String API_SERVER = "http://imoweb.azurewebsites.net/";
     public static final String API_KEY = "FSdgvuujDNpD1YPVjN95XcSFXBdsVwf66qeijgZDdwkji6GiyqYoKw15JRPywYV5";
     public static final String URL = API_SERVER + "apiKey=" + API_KEY;
-
+    public static final String DX = "problem";
+    public static final String RX = "medication";
+    public static final String TX = "procedure";
     public static int RESULT_OK = 0;
     public static int RESULT_CANCEL = 1;
 }
