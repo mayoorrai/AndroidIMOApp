@@ -13,6 +13,14 @@ public class Demographics implements Parcelable{
     String firstName; //patient's first name
     String lastName; //the patient's last name
     int age; //the patient's age
+    Gender _gender;
+    String language;
+    Date DOB;
+    int id;
+    String picture;
+    PatientAddress address;
+    String notes;
+    Insurance insurance;
 
     public Demographics(){}
 
@@ -95,21 +103,10 @@ public class Demographics implements Parcelable{
             return num;
         }
     }
-    Gender _gender;
-    String language;
-    Date DOB;
-    int id;
 
-    String picture;
-
-    PatientAddress address;
-    String notes;
-
-    Insurance insurance;
 
     public Insurance getInsurance(){
         return insurance;
-
     }
 
     public void setInsurance(Insurance insurance1){
