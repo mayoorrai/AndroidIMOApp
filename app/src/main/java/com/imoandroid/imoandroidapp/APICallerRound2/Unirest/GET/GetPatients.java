@@ -11,7 +11,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 /**
  * Created by samarthchopra on 4/12/15.
  */
-public class GETPatients extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
+public class GetPatients extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
 
     protected HttpResponse<JsonNode> doInBackground(String... msg) {
         HttpResponse<JsonNode> request = null;

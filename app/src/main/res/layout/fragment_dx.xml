@@ -3,6 +3,7 @@
             tools:context="com.imoandroid.imoandroidapp.FoundationActivity$PlaceholderFragment"
             xmlns:tools="http://schemas.android.com/tools"
             style="@style/MainScreen"
+    android:orientation="vertical"
         >
 
 
@@ -34,40 +35,80 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
                 android:id="@+id/buttonRow"
-                style="@style/ButtonRow">
+            >
 
+            <Button
+                android:id="@+id/btnRemove"
+                android:text="Remove"
+                android:layout_toLeftOf="@+id/btnEdit"
+                android:layout_margin="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <Button
+                android:id="@+id/btnAdd"
+                android:text="Add"
+                android:layout_toLeftOf="@id/btnRemove"
+                android:layout_margin="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
 
             <Button
                     android:id="@+id/btnSort"
                     android:text="Sort"
-                    style="@style/TabButton"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/btnAdd"
+                android:layout_margin="2dp"
+                   />
 
-            <Button
-                    android:id="@+id/btnAdd"
-                    android:text="Add"
-                    style="@style/TabButton"/>
 
-            <Button
-                    android:id="@+id/btnRemove"
-                    android:text="Remove"
-                    style="@style/TabButton"/>
 
-            <Button
-                    android:id="@+id/btnEdit"
-                    android:text="Edit"
-                    style="@style/TabButton"/>
+
 
             <Button
                     android:id="@+id/btnSave"
                     android:text="Save"
-                    style="@style/TabButton"/>
+                android:layout_margin="2dp"
+                android:layout_toLeftOf="@+id/btnBilling"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnEdit"
+                android:text="Edit"
+                android:layout_margin="2dp"
+                android:layout_toLeftOf="@id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <Button
                     android:id="@+id/btnBilling"
                     android:text="Send to Billing"
-                    style="@style/TabButton"/>
-        </LinearLayout>
+                android:layout_margin="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/listBorder"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:background="#666">
+        <ListView
+            android:id="@+id/lvTerm"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"></ListView>
+    </RelativeLayout>
 
 </LinearLayout>

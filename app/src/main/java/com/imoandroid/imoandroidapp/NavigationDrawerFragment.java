@@ -33,7 +33,7 @@ import android.widget.ListView;
 import android.widget.TabWidget;
 import android.widget.Toast;
 
-import com.imoandroid.imoandroidapp.APICallerRound2.GetPatients;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GetPatients;
 import com.mashape.unirest.http.*;
 
 import java.util.ArrayList;
