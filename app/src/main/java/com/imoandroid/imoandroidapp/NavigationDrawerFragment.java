@@ -1,7 +1,6 @@
 package com.imoandroid.imoandroidapp;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -15,8 +14,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,22 +21,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TabWidget;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GetPatients;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientWrapper;
 import com.mashape.unirest.http.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -397,8 +392,17 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
             {
                 Patient created = data.getParcelableExtra("patient");
 
-                Toast.makeText(getActivity(),created.getDemo().getFullName()+ " created",Toast.LENGTH_SHORT).show();
+                try {
+                    POSTPatientWrapper.poster(created);
+                    Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " created",Toast.LENGTH_SHORT).show();
+                    listAdapter.AddPatient(created);
+                    mDrawerListView.setSelection(0);
+                    mDrawerListView.performItemClick(mDrawerListView.getChildAt(0),0,listAdapter.getItemId(0));
 
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " Could not create!!!",Toast.LENGTH_SHORT).show();
+                }
                 //Add patient to TabHost selected
             }
             else if( resultCode == Constants.RESULT_CANCEL)

@@ -21,7 +21,8 @@ public class POSTPatient extends AsyncTask<String, Integer, HttpResponse<JsonNod
             HttpResponse<String> back = Unirest.post("http://66.252.70.193/patients")
                     .header("accept", "application/json")
                     .queryString("apiKey", "QhIno484vsazggxvZgf2EGZjkYunH24f7MNz5JXmI83bDMTOgmwVw6eqss7I18U7")
-                    .body("{\"firstName\":\"sam\", \"lastName\":\"chop\"}")
+//                    .body("{\"firstName\":\"sam\", \"lastName\":\"chop\"}")
+                    .body(msg[0])
                     .asString();
 
         } catch (UnirestException e) {

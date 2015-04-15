@@ -26,6 +26,12 @@ public class DisplayPatientAdapter extends ArrayAdapter<Patient> {
         this.data = data;
     }
 
+    public void AddPatient(Patient p)
+    {
+        data.add(0,p);
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public View getView(int position, View child, ViewGroup parent) {
@@ -41,7 +47,7 @@ public class DisplayPatientAdapter extends ArrayAdapter<Patient> {
         }
         Patient p = data.get(position);
         pat.setTag(p);
-        pat.setText(p.getDemo().getFullName());
+        pat.setText(p.getDemo().createFullNameGenerator());
 
         return child;
     }
