@@ -47,7 +47,7 @@ import java.util.concurrent.ExecutionException;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
+public class NavigationDrawerFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -98,22 +98,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Read in the flag indicating whether or not the user has demonstrated awareness of the
-        // drawer. See PREF_USER_LEARNED_DRAWER for details.
-       /* Patient newPatient = new Patient();
-        Demographics d1 = new Demographics();
-        d1.firstName = "Nam";
-        d1.lastName = "Prabhu";
-        newPatient.demo = d1;
 
-        Patient newPatient2 = new Patient();
-        Demographics d2 = new Demographics();
-        d2.firstName = "Vishal";
-        d2.lastName = "Pir";
-        newPatient2.demo = d2;
-
-        allPatients.add(newPatient);
-        allPatients.add(newPatient2);*/
 
         HttpResponse<JsonNode> patientData = null;
 
@@ -125,12 +110,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             e.printStackTrace();
         }
 
-        Log.v("NEWNEW--", patientData.getBody().toString());
+//        Log.v("NEWNEW--", patientData.getBody().toString());
 
         PatientParser p = new PatientParser();
         allPatients = p.parsePatients(patientData.getBody().toString());
-
-        Log.v("###", allPatients.get(0).getDemo().getFirstName());
 
         tempPatients = new ArrayList<Patient>(allPatients);
 
@@ -199,7 +182,22 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
             }
         });
+
+        mDrawerListView.setOnItemClickListener(this);
+
+
         return v;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Patient p = (Patient)parent.getItemAtPosition(position);
+       // Toast.makeText(getActivity().getApplicationContext(), p.getDemo().getFirstName(), Toast.LENGTH_SHORT).show();
+       ((NavigationDrawerPatient) getActivity()).givePatientToActivity(p);
+       // Toast.makeText(getActivity().getApplicationContext(), "Does it work" + returnValue, Toast.LENGTH_SHORT).show();
+
+
     }
 
     public boolean isDrawerOpen() {
@@ -284,6 +282,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
+
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);

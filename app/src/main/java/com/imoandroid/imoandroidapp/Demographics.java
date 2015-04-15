@@ -14,7 +14,9 @@ public class Demographics implements Parcelable{
     String lastName; //the patient's last name
     int age; //the patient's age
 
-    public Demographics(){}
+    public Demographics(){
+        address = new PatientAddress();
+    }
 
     public Demographics(Demographics copy)
     {

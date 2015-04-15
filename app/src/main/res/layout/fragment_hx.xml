@@ -23,8 +23,8 @@
                 style="@style/PatientDetails"/>
 
         <TextView
-                android:id="@+id/fragment_patientDOB"
-                android:text="@string/strDOB"
+                android:id="@+id/fragment_patientAge"
+                android:text="@string/strAge"
                 style="@style/PatientDetails"/>
 
         <TextView
