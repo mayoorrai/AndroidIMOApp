@@ -1,20 +1,15 @@
 package com.imoandroid.imoandroidapp;
 
-import android.content.Context;
-import android.graphics.Point;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -90,7 +85,7 @@ public  class DxFragment extends Fragment {
             border.setVisibility(View.GONE);
             return;
         }
-        String s = p.getDemo().getFullName();
+        String s = p.getDemo().createFullNameGenerator();
         patientName.setText(s.length()==0 ? "Patient Name":s);
         patientAge.setText("Age: "+String.valueOf(p.getDemo().getAge()));
         patientId.setText("ID: "+String.valueOf(p.getDemo().getId()));

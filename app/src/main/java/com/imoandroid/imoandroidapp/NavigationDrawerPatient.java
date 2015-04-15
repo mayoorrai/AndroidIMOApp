@@ -148,17 +148,6 @@ public class NavigationDrawerPatient extends ActionBarActivity
         DxFragment dx = (DxFragment) getSupportFragmentManager().findFragmentByTag("tab1");
         dx.refresh(patient);
 
-        /*FragmentManager fm = getSupportFragmentManager();
-
-        if(fm.findFragmentById(0) == null){
-            Bundle arguments = new Bundle();
-            arguments.putParcelable("Patient" , patient);
-            DxFragment fragment = new DxFragment();
-            fragment.setArguments(arguments);
-            fm.beginTransaction().replace(v.getId() , fragment).addToBackStack(null).commit();
-            fm.executePendingTransactions();
-
-        }*/
 
     }
 
@@ -166,18 +155,6 @@ public class NavigationDrawerPatient extends ActionBarActivity
 
         RxFragment rx = (RxFragment) getSupportFragmentManager().findFragmentByTag("tab2");
         rx.refresh(patient);
-//        FragmentManager fm = getSupportFragmentManager();
-//       // Log.v(TAG , "%%%%%%%" + mTabHost.getTag().toString());
-//
-//        if(fm.findFragmentById(1) == null){
-//            Bundle arguments = new Bundle();
-//            arguments.putParcelable("Patient" , patient);
-//            RxFragment fragment = new RxFragment();
-//            fragment.setArguments(arguments);
-//            fm.beginTransaction().replace(v.getId() , fragment).addToBackStack(null).commit();
-//            fm.executePendingTransactions();
-//
-//        }
 
     }
 
@@ -208,25 +185,6 @@ public class NavigationDrawerPatient extends ActionBarActivity
         if (p != null) {
 
             Constants.CurrentPat = p;
-//            mTabHost.setCurrentTab(0);
-//           // tabWidget.focusCurrentTab(0);
-//
-             // updateDx(p);
-          //  tabWidget.focusCurrentTab(1);
-//
-//           mTabHost.setCurrentTab(1);
-//
-//          //  tabWidget.focusCurrentTab(1);
-             //updateRx(p);
-//
-//            mTabHost.setCurrentTab(2);
-//
-//          //  tabWidget.focusCurrentTab(2);
-//            updateTx(mTabHost.getTabContentView() , p);
-//            mTabHost.setCurrentTab(3);
-//
-//          //  tabWidget.focusCurrentTab(3);
-//            updateHx(mTabHost.getTabContentView() , p);
            int tab = mTabHost.getCurrentTab();
 
            switch (tab) {
@@ -252,17 +210,7 @@ public class NavigationDrawerPatient extends ActionBarActivity
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
+        mTitle = "Patient Details";
     }
 
     public void restoreActionBar() {

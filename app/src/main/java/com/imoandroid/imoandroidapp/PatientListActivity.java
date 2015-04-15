@@ -35,7 +35,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -182,7 +181,7 @@ getActionBar().setHomeButtonEnabled(true);
     private void getPatientNames() {
         navDrawerPatientNames = new ArrayList<String>();
         for (int i = 0; i < patientList.size(); i++) {
-            navDrawerPatientNames.add(patientList.get(i).getDemo().getFullName());
+            navDrawerPatientNames.add(patientList.get(i).getDemo().createFullNameGenerator());
         }
     }
 

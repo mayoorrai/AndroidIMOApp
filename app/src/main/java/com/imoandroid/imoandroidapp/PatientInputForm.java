@@ -2,6 +2,7 @@ package com.imoandroid.imoandroidapp;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -194,6 +196,7 @@ public class PatientInputForm extends ActionBarActivity {
     }
 
     private void verifyAndSend() {
+
         StringBuilder error = new StringBuilder();
         boolean allGood = true;
         boolean phone = !ethome.getText().toString().isEmpty() ||
