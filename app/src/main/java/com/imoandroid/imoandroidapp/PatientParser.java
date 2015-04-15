@@ -42,8 +42,9 @@ public class PatientParser {
                     String lastName = getPatient.getString("last_name");
                     String firstName = getPatient.getString("first_name");
                     String id = getPatient.getString("id");
-                    if(firstName == "Melinda" && lastName=="Test") {
-                        URL patientDetailsURL = new URL("http://66.252.70.193/patients?firstName=Melinda&lastName=Test&id=1&apiKey=FSdgvuujDNpD1YPVjN95XcSFXBdsVwf66qeijgZDdwkji6GiyqYoKw15JRPywYV5");
+                    if(firstName.equals("melinda")) {
+                        Log.v(TAG , "-----INMELINDA");
+                        URL patientDetailsURL = new URL("http://66.252.70.193/patients?firstName=melinda&lastName=test&id=1&apiKey=FSdgvuujDNpD1YPVjN95XcSFXBdsVwf66qeijgZDdwkji6GiyqYoKw15JRPywYV5");
                         HttpURLConnection connection = (HttpURLConnection) patientDetailsURL.openConnection();
                         connection.connect();
                         responseCode = connection.getResponseCode();
@@ -54,6 +55,7 @@ public class PatientParser {
                             JSONObject patientDetails = jsonNewPatient.getJSONObject("Patient");
                             Log.v(TAG, "-----" + patientDetails);
                             p.setProblems(setUpProblems(patientDetails));
+                            Log.v(TAG, "--------" + p.getProblems().size());
                             p.setMedications(setUpMedications(patientDetails));
                             p.setProcedures(setUpProcedures(patientDetails));
                             p.setDemo(setUpDemographics(patientDetails));
@@ -176,8 +178,8 @@ public class PatientParser {
         Demographics d = new Demographics();
         try {
             demographics = patientDetails.getJSONObject("Demographics");
-            String lastName = demographics.getString("last_name");
-            String firstName = demographics.getString("first_name");
+            String lastName = demographics.getString("LastName");
+            String firstName = demographics.getString("FirstName");
            String age = demographics.getString("Age");
             String language = demographics.getString("Language");
             String gender = demographics.getString("Gender");

@@ -10,8 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by mayoorrai on 3/31/15.
@@ -26,6 +29,9 @@ public  class RxFragment extends Fragment {
     TextView patientAge;
     TextView patientId;
     TextView patientAddress;
+    ListView terms;
+    View border;
+    DisplayPTAdapter adapter;
     Patient p;
 
     @Override
@@ -43,7 +49,7 @@ public  class RxFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.fragment_rx, container, false);
+        View v = inflater.inflate(R.layout.fragment_dx, container, false);
         p = Constants.CurrentPat;
 
         Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
@@ -53,6 +59,14 @@ public  class RxFragment extends Fragment {
         patientAge = (TextView)v.findViewById(R.id.fragment_patientAge);
         patientId = (TextView)v.findViewById(R.id.fragment_patientID);
         patientAddress = (TextView)v.findViewById(R.id.fragment_patientLocation);
+        terms = (ListView)v.findViewById(R.id.lvTerm);
+        border = v.findViewById(R.id.listBorder);
+        ArrayList<Term> aTerms = p == null ? new ArrayList<Term>() :p.getMedications();
+        adapter = new DisplayPTAdapter(getActivity().getApplicationContext(),R.layout.activity_term_display,
+                new ArrayList<Term>());
+
+        terms.setAdapter(adapter);
+
 
         updateFields();
 
@@ -71,6 +85,7 @@ public  class RxFragment extends Fragment {
 
     private void updateFields(){
         if(p == null){
+            border.setVisibility(View.GONE);
             return;
         }
         String s = p.getDemo().getFullName();
@@ -78,5 +93,9 @@ public  class RxFragment extends Fragment {
         patientAge.setText("Age: "+String.valueOf(p.getDemo().getAge()));
         patientId.setText("ID: "+String.valueOf(p.getDemo().getId()));
         patientAddress.setText("Address: "+p.getDemo().getAddress().getAddress1());
+        adapter.UpdateTerms(p.getMedications());
+        border.setVisibility(p.getMedications().size() > 0 ? View.VISIBLE : View.GONE);
+        Log.v(TAG, "%%%%%%%%%" + p.getMedications().size());
     }
 }
+
