@@ -22,7 +22,9 @@ public class Demographics implements Parcelable{
     String notes;
     Insurance insurance;
 
-    public Demographics(){}
+    public Demographics(){
+        address = new PatientAddress();
+    }
 
     public Demographics(Demographics copy)
     {

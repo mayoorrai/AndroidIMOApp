@@ -2,6 +2,7 @@ package com.imoandroid.imoandroidapp;
 
 import android.app.Activity;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -10,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +21,10 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class NavigationDrawerPatient extends ActionBarActivity
@@ -33,10 +37,16 @@ public class NavigationDrawerPatient extends ActionBarActivity
 
     private FragmentTabHost mTabHost;
 
+    public final String TAG = NavigationDrawerPatient.class.getSimpleName();
+
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
+
+    TabWidget tabWidget;
+
+    Patient p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,43 +70,131 @@ public class NavigationDrawerPatient extends ActionBarActivity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        initializeTabs();
+
+        initializeTabs(null);
     }
 
 
 
-    public void initializeTabs() {
+    public void initializeTabs(final Patient p) {
         // Initialize tabhost (parent)
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
 
+
         // Initialize tabs and tabContent (children)
-        TabWidget tabWidget = mTabHost.getTabWidget();
+        tabWidget = mTabHost.getTabWidget();
         FrameLayout tabContent = mTabHost.getTabContentView();
 
+
         // Dx tab
+
+        Bundle b = new Bundle();
+
+        if(p != null){
+          mTabHost.setCurrentTab(0);
+          mTabHost.clearAllTabs();
+            b.putString("firstName" , p.getDemo().getFirstName());
+            b.putString("lastName" , p.getDemo().getLastName());
+        }
+        else{
+            b = null;
+        }
+
+
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab1").setIndicator("Dx", null),
-                DxFragment.class, null);
+                DxFragment.class, b);
+
 
         // Rx tab
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab2").setIndicator("Rx", null),
-                RxFragment.class, null);
+                RxFragment.class, b);
 
         // Hx tab
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab3").setIndicator("Hx", null),
-                HxFragment.class, null);
+                HxFragment.class, b);
 
         // Tx tab
         mTabHost.addTab(
                 mTabHost.newTabSpec("tab4").setIndicator("Tx", null),
-                TxFragment.class, null);
+                TxFragment.class, b);
 
-        // set Dx tab as default
+   /*   mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
+            @Override
+            public void onTabChanged(String tabId) {
+              if("tab1".equals(tabId)) {
+                    if(p != null) {
+                        Log.v(TAG, "+++++++" + "-----DX");
+                        updateDx(p);
+                    }
+
+             }
+               if("tab2".equals(tabId)) {
+                     Log.v(TAG, "+++++++" + "-----RX");
+                 }
+            }});*/
+
+        // set Dx tab as default*/
         mTabHost.setCurrentTab(0);
+
+        //Log.v(TAG , "Current tab is " + mTabHost.getChildAt(5).toString());
     }
+
+    private void updateDx(Patient patient){
+
+        DxFragment dx = (DxFragment) getSupportFragmentManager().findFragmentByTag("tab1");
+        dx.refresh(patient);
+
+        /*FragmentManager fm = getSupportFragmentManager();
+
+        if(fm.findFragmentById(0) == null){
+            Bundle arguments = new Bundle();
+            arguments.putParcelable("Patient" , patient);
+            DxFragment fragment = new DxFragment();
+            fragment.setArguments(arguments);
+            fm.beginTransaction().replace(v.getId() , fragment).addToBackStack(null).commit();
+            fm.executePendingTransactions();
+
+        }*/
+
+    }
+
+    private void updateRx(Patient patient){
+
+        RxFragment rx = (RxFragment) getSupportFragmentManager().findFragmentByTag("tab2");
+        rx.refresh(patient);
+//        FragmentManager fm = getSupportFragmentManager();
+//       // Log.v(TAG , "%%%%%%%" + mTabHost.getTag().toString());
+//
+//        if(fm.findFragmentById(1) == null){
+//            Bundle arguments = new Bundle();
+//            arguments.putParcelable("Patient" , patient);
+//            RxFragment fragment = new RxFragment();
+//            fragment.setArguments(arguments);
+//            fm.beginTransaction().replace(v.getId() , fragment).addToBackStack(null).commit();
+//            fm.executePendingTransactions();
+//
+//        }
+
+    }
+
+    private void updateTx(Patient patient){
+
+        TxFragment tx = (TxFragment) getSupportFragmentManager().findFragmentByTag("tab4");
+        tx.refresh(patient);
+    }
+
+    private void updateHx(Patient patient){
+
+        HxFragment hx = (HxFragment) getSupportFragmentManager().findFragmentByTag("tab3");
+        hx.refresh(patient);
+
+    }
+
+
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -104,6 +202,53 @@ public class NavigationDrawerPatient extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+    }
+
+    public void givePatientToActivity(Patient p) {
+        if (p != null) {
+
+            Constants.CurrentPat = p;
+//            mTabHost.setCurrentTab(0);
+//           // tabWidget.focusCurrentTab(0);
+//
+             // updateDx(p);
+          //  tabWidget.focusCurrentTab(1);
+//
+//           mTabHost.setCurrentTab(1);
+//
+//          //  tabWidget.focusCurrentTab(1);
+             //updateRx(p);
+//
+//            mTabHost.setCurrentTab(2);
+//
+//          //  tabWidget.focusCurrentTab(2);
+//            updateTx(mTabHost.getTabContentView() , p);
+//            mTabHost.setCurrentTab(3);
+//
+//          //  tabWidget.focusCurrentTab(3);
+//            updateHx(mTabHost.getTabContentView() , p);
+           int tab = mTabHost.getCurrentTab();
+
+           switch (tab) {
+               case Constants.DX_TAB:
+                   updateDx(p);
+                   break;
+               case Constants.RX_TAB:
+                   updateRx(p);
+                   break;
+               case Constants.HX_TAB:
+                   updateHx(p);
+                   break;
+               case Constants.TX_TAB:
+                   updateTx(p);
+                   break;
+               default:
+           }
+
+
+
+        }
+
     }
 
     public void onSectionAttached(int number) {

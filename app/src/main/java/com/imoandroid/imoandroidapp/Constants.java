@@ -32,4 +32,10 @@ public class Constants {
     public static final String TX = "procedure";
     public static int RESULT_OK = 0;
     public static int RESULT_CANCEL = 1;
+
+    public static Patient CurrentPat;
+    public static final int DX_TAB = 0;
+    public static final int RX_TAB = 1;
+    public static final int HX_TAB = 2;
+    public static final int TX_TAB = 3;
 }
