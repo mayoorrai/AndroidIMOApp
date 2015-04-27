@@ -4,6 +4,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.print.PrintAttributes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -12,10 +22,13 @@ public class Patient implements Parcelable{
 	// Sammy wrote code!
     // Basic Patient Details
 
+    @JsonProperty("Demographics")
     private Demographics demo;
-
+    @JsonProperty("Problem")
     private ArrayList<Term> problems;
+    @JsonProperty("Procedure")
     private ArrayList<Term> procedures;
+    @JsonProperty("Medication")
     private ArrayList<Term> medications;
 
     public Demographics getDemo() {
@@ -130,4 +143,26 @@ public class Patient implements Parcelable{
             return new Patient[size];
         }
     };
+
+
+
+    public String toJSON(){
+        ObjectMapper mapper = new ObjectMapper();
+        String back = null;
+        try
+        {
+            back = mapper.writeValueAsString(this);
+        } catch (JsonGenerationException e)
+        {
+            e.printStackTrace();
+        } catch (JsonMappingException e)
+        {
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return back;
+    }
 }

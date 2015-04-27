@@ -2,6 +2,14 @@ package com.imoandroid.imoandroidapp;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Vishal on 4/12/2015.
@@ -68,5 +76,36 @@ public class Term implements Parcelable {
                         this.AdminCode,
                         this.AdminTitle
                 });
+    }
+
+    public String toJSONString() throws JSONException {
+        ObjectMapper mapper = new ObjectMapper();
+        String back = null;
+        try{
+            back = mapper.writeValueAsString(this);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return back;
+
+//        JSONObject initObj = new JSONObject(back);
+//
+//        Log.v("--**", initObj.toString());
+//
+//        JSONArray arr = new JSONArray();
+//        arr.put(initObj);
+//        Log.v("--***", arr.toString());
+//
+//
+//        JSONObject obj = new JSONObject();
+//
+//        obj.put("results", arr);
+//
+//        Log.v("--***--", obj.toString());
+
+
+//        return obj.toString();
     }
 }
