@@ -21,14 +21,9 @@ public class POSTPatient extends AsyncTask<String, Integer, HttpResponse<JsonNod
             HttpResponse<String> back = Unirest.post("http://66.252.70.193/patients")
                     .header("accept", "application/json")
                     .queryString("apiKey", "QhIno484vsazggxvZgf2EGZjkYunH24f7MNz5JXmI83bDMTOgmwVw6eqss7I18U7")
-<<<<<<< Updated upstream
 //                    .body("{\"firstName\":\"sam\", \"lastName\":\"chop\"}")
-=======
->>>>>>> Stashed changes
                     .body(msg[0])
                     .asString();
-
-            Log.v("CREATED", back.getBody().toString());
 
         } catch (UnirestException e) {
             // TODO Auto-generated catch block

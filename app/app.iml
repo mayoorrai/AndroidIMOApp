@@ -88,7 +88,6 @@
     <orderEntry type="library" exported="" name="com.fasterxml.jackson.databind" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
-    <orderEntry type="library" exported="" name="unirest-java-1.4.5-withDependency-ShadedForAndroid" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.2" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-2.3.1" level="project" />
   </component>

@@ -21,10 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< Updated upstream
 import android.widget.AdapterView;
-=======
->>>>>>> Stashed changes
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,17 +29,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-<<<<<<< Updated upstream
 import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GetPatients;
-=======
-import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GETDx;
-import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GETPatients;
-import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientDxWrapper;
->>>>>>> Stashed changes
 import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientWrapper;
 import com.mashape.unirest.http.*;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,66 +96,13 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
 
 
-
-        Term t = new Term("ProblemIT Professional","23", "some title", "samuel", "chopra", "!");
-
-        try {
-            Log.v("TERM:", t.toJSONString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
         HttpResponse<JsonNode> patientData = null;
 
         try {
-            Patient pat = new Patient();
-            pat.getDemo().setFirstName("Chief");
-            pat.getDemo().setLastName("Keef");
-            pat.getDemo().set_gender(0);
-            pat.getDemo().setDOB(1289044800);
-            pat.getDemo().setLanguage("English");
-            pat.getDemo().setPicture("hot picture");
-            pat.getDemo().setNotes("--");
-            pat.getDemo().setId(35);
-            Insurance ins = new Insurance();
-
-            ins.setContractorCode(300);
-            ins.setContractorName("big baller");
-
-            pat.getDemo().setInsurance(ins);
-
-            PatientAddress patadd = new PatientAddress();
-            patadd.setAddress1(" local jail");
-            patadd.setAddress2("state jail");
-            patadd.setCity("Chitown");
-            patadd.setState("Illinois");
-            patadd.setZip(300);
-            patadd.setMobilePhone(911);
-            patadd.setHomePhone(911);
-            patadd.setOfficePhone(911);
-
-            pat.getDemo().setAddress(patadd);
-            Log.v("-->", "about to test bob");
-
-//            POSTPatientWrapper.poster(pat);
-            POSTPatientDxWrapper.poster(pat,t);
-//            new POSTPatient().execute(pat.toJSON());
-
-//            RetreivePatient.getPatient("Bob", "Test", "2");
-
-
-            patientData = new GETPatients().execute().get();
-            patientData = new GETDx().execute("five").get();
-
-
+            patientData = new GetPatients().execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -175,11 +111,6 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         PatientParser p = new PatientParser();
         allPatients = p.parsePatients(patientData.getBody().toString());
 
-<<<<<<< Updated upstream
-=======
-//        Log.v("###", allPatients.get(0).getDemo().getFirstName());
-
->>>>>>> Stashed changes
         tempPatients = new ArrayList<Patient>(allPatients);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -468,7 +399,6 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
             {
                 Patient created = data.getParcelableExtra("patient");
 
-<<<<<<< Updated upstream
                 try {
                     POSTPatientWrapper.poster(created);
                     Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " created",Toast.LENGTH_SHORT).show();
@@ -480,10 +410,6 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                     e.printStackTrace();
                     Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " Could not create!!!",Toast.LENGTH_SHORT).show();
                 }
-=======
-                Toast.makeText(getActivity(),created.getDemo().getFullName()+ " created",Toast.LENGTH_SHORT).show();
-                // post that stuff
->>>>>>> Stashed changes
                 //Add patient to TabHost selected
             }
             else if( resultCode == Constants.RESULT_CANCEL)

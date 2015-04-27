@@ -3,13 +3,10 @@ package com.imoandroid.imoandroidapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * Created by namrataprabhu on 4/11/15.
  */
 public class Insurance implements Parcelable{
-    @JsonProperty("ContractorCode")
     int ContractorCode;
 
     public String getContractorName() {
@@ -28,7 +25,6 @@ public class Insurance implements Parcelable{
         ContractorCode = contractorCode;
     }
 
-    @JsonProperty("ContractorName")
     String ContractorName;
 
     public Insurance(){

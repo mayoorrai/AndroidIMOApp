@@ -17,10 +17,6 @@ import java.io.IOException;
  */
 public class POSTPatientWrapper {
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     public static void poster(Patient p) throws JsonProcessingException {
         Demographics demo = p.getDemo();
         ObjectMapper mapper = new ObjectMapper();

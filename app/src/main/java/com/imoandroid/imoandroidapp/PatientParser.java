@@ -195,13 +195,13 @@ public class PatientParser {
             d.setAddress(newAddress);
 
             if (gender.equals("M")) {
-                d.setGender(Demographics.Gender.M);
+                d.set_gender(Demographics.Gender.M);
             }
             else if (gender.equals("F")) {
-                d.setGender(Demographics.Gender.F);
+                d.set_gender(Demographics.Gender.F);
             }
             else {
-                d.setGender(Demographics.Gender.Other);
+                d.set_gender(Demographics.Gender.Other);
             }
             d.setLanguage(language);*/
            // d.setAge(Integer.parseInt(age));

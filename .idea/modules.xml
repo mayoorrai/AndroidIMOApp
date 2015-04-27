@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidIMOApp.iml" filepath="$PROJECT_DIR$/AndroidIMOApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/CurrentIMO.iml" filepath="$PROJECT_DIR$/CurrentIMO.iml" />
       <module fileurl="file://$PROJECT_DIR$/FinalProjectIMO.iml" filepath="$PROJECT_DIR$/FinalProjectIMO.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
