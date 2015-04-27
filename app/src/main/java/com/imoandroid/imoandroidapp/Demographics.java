@@ -10,17 +10,13 @@ import java.util.Date;
 /**
  * Created by namrataprabhu on 4/11/15.
  */
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Demographics implements Parcelable{
 
     String firstName; //patient's first name
     String lastName; //the patient's last name
     int age; //the patient's age
-    Gender gender;
+    Gender _gender;
     String language;
     Date DOB;
     int id;
@@ -38,7 +34,7 @@ public class Demographics implements Parcelable{
         firstName = copy.getFirstName();
         lastName = copy.getLastName();
         age = copy.getAge();
-        gender = copy.getGender();
+        _gender = copy.get_gender();
         language = copy.getLanguage();
         DOB = copy.getDOB();
         id = copy.getId();
@@ -113,6 +109,7 @@ public class Demographics implements Parcelable{
         }
     }
 
+
     public Insurance getInsurance(){
         return insurance;
     }
@@ -161,12 +158,12 @@ public class Demographics implements Parcelable{
         this.age = age;
     }
 
-    public Gender getGender() {
-        return gender;
+    public Gender get_gender() {
+        return _gender;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
+    public void set_gender(Gender _gender) {
+        this._gender = _gender;
     }
 
     public void set_gender(int id)
@@ -174,13 +171,13 @@ public class Demographics implements Parcelable{
         switch(id)
         {
             case 0:
-                gender = Gender.M;
+                _gender = Gender.M;
                 break;
             case 1:
-                gender = Gender.F;
+                _gender = Gender.F;
                 break;
             case 2:
-                gender = Gender.Other;
+                _gender = Gender.Other;
                 break;
         }
     }

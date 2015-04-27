@@ -241,7 +241,7 @@ getActionBar().setHomeButtonEnabled(true);
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra(Constants.TAG_FIRST_NAME, p.getDemo().getFirstName());
             intent.putExtra(Constants.TAG_LAST_NAME, p.getDemo().getLastName());
-            intent.putExtra(Constants.TAG_GENDER, p.getDemo().getGender().getNum());
+            intent.putExtra(Constants.TAG_GENDER, p.getDemo().get_gender().getNum());
             intent.putExtra(Constants.TAG_DOB, p.getDemo().getDOB().getTime());
             intent.putExtra(Constants.TAG_ADDRESS1, p.getDemo().address.getAddress1());
             intent.putExtra(Constants.TAG_ADDRESS2, p.getDemo().address.getAddress2());
@@ -295,13 +295,13 @@ getActionBar().setHomeButtonEnabled(true);
                         curr.getDemo().setDOB(o.getLong(Constants.TAG_DOB));
                         String g = o.getString(Constants.TAG_GENDER);
                         if (g.equals("m")) {
-                            curr.getDemo().setGender(Demographics.Gender.M);
+                            curr.getDemo().set_gender(Demographics.Gender.M);
                         }
                         else if (g.equals("f")) {
-                            curr.getDemo().setGender(Demographics.Gender.F);
+                            curr.getDemo().set_gender(Demographics.Gender.F);
                         }
                         else {
-                            curr.getDemo().setGender(Demographics.Gender.Other);
+                            curr.getDemo().set_gender(Demographics.Gender.Other);
                         }
                         curr.getDemo().setLanguage(o.getString(Constants.TAG_LANGUAGE));
                         curr.getDemo().setNotes(o.getString(Constants.TAG_NOTES));
