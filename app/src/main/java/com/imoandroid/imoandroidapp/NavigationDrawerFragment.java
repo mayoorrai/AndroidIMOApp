@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -163,7 +164,13 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                 List<Patient> searchPatients = new ArrayList<Patient>();
                 for(int i = 0 ; i < allPatients.size() ; i++){
                     Patient p = allPatients.get(i);
-                    if(p.getDemo().firstName.toLowerCase().contains(s) || p.getDemo().lastName.toLowerCase().contains(s)) {
+//                    Log.v("------>", p.getDemo().getFirstName());
+//                    Log.v("------>", p.getDemo().getLastName());
+
+                    Demographics d = p.getDemo();
+//                    Log.v("-->First",d.getFirstName() );
+
+                    if((d.getFirstName()).toLowerCase().contains(s) || (d.getLastName()).toLowerCase().contains(s)) {
                         searchPatients.add(p);
                     }
                 }

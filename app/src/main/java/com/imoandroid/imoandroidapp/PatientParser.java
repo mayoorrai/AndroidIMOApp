@@ -54,16 +54,19 @@ public class PatientParser {
                             jsonNewPatient = new JSONObject(newResponseData);
                             JSONObject patientDetails = jsonNewPatient.getJSONObject("Patient");
                             Log.v(TAG, "-----" + patientDetails);
-                            p.setProblems(setUpProblems(patientDetails));
+                           p.setProblems(setUpProblems(patientDetails));
                             Log.v(TAG, "--------" + p.getProblems().size());
                             p.setMedications(setUpMedications(patientDetails));
                             p.setProcedures(setUpProcedures(patientDetails));
                             p.setDemo(setUpDemographics(patientDetails));
+                            Log.v(TAG , "%%%%%%%" + p.getDemo().getLastName());
                             p.getDemo().setId(Integer.parseInt(id));
                             allPatients.add(p);
                         }
                     }
                     else{
+                        Log.v("** FIRSTNAME:", firstName);
+
                         Demographics d = new Demographics();
                         d.setFirstName(firstName);
                         d.setLastName(lastName);
@@ -180,8 +183,8 @@ public class PatientParser {
             demographics = patientDetails.getJSONObject("Demographics");
             String lastName = demographics.getString("LastName");
             String firstName = demographics.getString("FirstName");
-           String age = demographics.getString("Age");
-            String language = demographics.getString("Language");
+           //String age = demographics.getString("Age");
+         /*   String language = demographics.getString("Language");
             String gender = demographics.getString("Gender");
 
 
@@ -200,8 +203,8 @@ public class PatientParser {
             else {
                 d.set_gender(Demographics.Gender.Other);
             }
-            d.setLanguage(language);
-            d.setAge(Integer.parseInt(age));
+            d.setLanguage(language);*/
+           // d.setAge(Integer.parseInt(age));
             d.setFirstName(firstName);
             d.setLastName(lastName);
 
