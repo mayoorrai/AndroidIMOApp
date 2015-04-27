@@ -3,11 +3,14 @@ package com.imoandroid.imoandroidapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Date;
 
 /**
  * Created by namrataprabhu on 4/11/15.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Demographics implements Parcelable{
 
     String firstName; //patient's first name
@@ -22,7 +25,9 @@ public class Demographics implements Parcelable{
     String notes;
     Insurance insurance;
 
-    public Demographics(){}
+    public Demographics(){
+        address = new PatientAddress();
+    }
 
     public Demographics(Demographics copy)
     {
@@ -193,7 +198,7 @@ public class Demographics implements Parcelable{
         this.DOB = new Date(time);
     }
 
-    public String getFullName() {
+    public String createFullNameGenerator() {
         return this.getFirstName() + " " + this.getLastName();
     }
 

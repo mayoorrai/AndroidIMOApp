@@ -22,7 +22,7 @@
     <!-- android:maxSdkVersion="18" /> -->
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo" >
         <activity
@@ -54,7 +54,7 @@
         </activity>
         <activity
             android:name=".NavigationDrawerPatient"
-            android:label="@string/title_activity_navigation_drawer_patient"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="landscape">

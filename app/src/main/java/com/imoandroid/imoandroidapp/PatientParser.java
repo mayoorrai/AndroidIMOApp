@@ -27,45 +27,54 @@ public class PatientParser {
         char[] inputBuffer = new char[256];
         JSONArray jsonPatientArray = null;
         JSONObject jsonPatients = null;
+        JSONObject jsonNewPatient = null;
 
         ArrayList<Patient> allPatients = new ArrayList<Patient>();
 
         try {
-//            URL patientsURL = new URL("http://66.252.70.193/patients?apiKey=QhIno484vsazggxvZgf2EGZjkYunH24f7MNz5JXmI83bDMTOgmwVw6eqss7I18U7");
-//            HttpURLConnection connection = (HttpURLConnection) patientsURL.openConnection();
-//            connection.connect();
-//
-//            responseCode = connection.getResponseCode();
-//            // if responseCode == 200, download data
-//
-//            if (responseCode == HttpURLConnection.HTTP_OK) {
-//
-//                InputStream inputStream = connection.getInputStream();
-//
-//                String responseData = slurp(inputStream, inputBuffer);
-
-                //System.out.println(responseData);
 
                 jsonPatients = new JSONObject(responseData);
                 jsonPatientArray = jsonPatients.getJSONArray("patients");
-
                 for (int i = 0; i < jsonPatientArray.length(); i++) {
 
                     Patient p = new Patient();
                     JSONObject getPatient = jsonPatientArray.getJSONObject(i);
-                    //JSONObject getPatient = patient.getJSONObject("Patient");
-                   // JSONObject demographics = getPatient.getJSONObject("Demographics");
-                    p.setProblems(setUpProblems(getPatient));
-                    p.setMedications(setUpMedications(getPatient));
-                    p.setProcedures(setUpProcedures(getPatient));
-                    p.setDemo(setUpDemographics(getPatient));
-                    allPatients.add(p);
+                    String lastName = getPatient.getString("last_name");
+                    String firstName = getPatient.getString("first_name");
+                    String id = getPatient.getString("id");
+                    if(firstName.equals("melinda")) {
+                        Log.v(TAG , "-----INMELINDA");
+                        URL patientDetailsURL = new URL("http://66.252.70.193/patients?firstName=melinda&lastName=test&id=1&apiKey=FSdgvuujDNpD1YPVjN95XcSFXBdsVwf66qeijgZDdwkji6GiyqYoKw15JRPywYV5");
+                        HttpURLConnection connection = (HttpURLConnection) patientDetailsURL.openConnection();
+                        connection.connect();
+                        responseCode = connection.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            InputStream inputStream = connection.getInputStream();
+                            String newResponseData = slurp(inputStream, inputBuffer);
+                            jsonNewPatient = new JSONObject(newResponseData);
+                            JSONObject patientDetails = jsonNewPatient.getJSONObject("Patient");
+                            Log.v(TAG, "-----" + patientDetails);
+                           p.setProblems(setUpProblems(patientDetails));
+                            Log.v(TAG, "--------" + p.getProblems().size());
+                            p.setMedications(setUpMedications(patientDetails));
+                            p.setProcedures(setUpProcedures(patientDetails));
+                            p.setDemo(setUpDemographics(patientDetails));
+                            Log.v(TAG , "%%%%%%%" + p.getDemo().getLastName());
+                            p.getDemo().setId(Integer.parseInt(id));
+                            allPatients.add(p);
+                        }
+                    }
+                    else{
+                        Log.v("** FIRSTNAME:", firstName);
+
+                        Demographics d = new Demographics();
+                        d.setFirstName(firstName);
+                        d.setLastName(lastName);
+                        d.setId(Integer.parseInt(id));
+                        p.setDemo(d);
+                        allPatients.add(p);
+                    }
                 }
-
-
-           // }
-
-
 
         }
             catch(Exception e){
@@ -166,15 +175,18 @@ public class PatientParser {
         return newAddress;
     }
 
-    public Demographics setUpDemographics(JSONObject demographics){
+    public Demographics setUpDemographics(JSONObject patientDetails){
 
+        JSONObject demographics = null;
         Demographics d = new Demographics();
         try {
-            String lastName = demographics.getString("last_name");
-            String firstName = demographics.getString("first_name");
-           /* String age = demographics.getString("Age");
-            String language = demographics.getString("Language");
+            demographics = patientDetails.getJSONObject("Demographics");
+            String lastName = demographics.getString("LastName");
+            String firstName = demographics.getString("FirstName");
+           //String age = demographics.getString("Age");
+         /*   String language = demographics.getString("Language");
             String gender = demographics.getString("Gender");
+
 
            Insurance insurance1 = setUpInsurance(demographics);
            d.setInsurance(insurance1);
@@ -191,10 +203,11 @@ public class PatientParser {
             else {
                 d.set_gender(Demographics.Gender.Other);
             }
-            d.setLanguage(language);
-            d.setAge(Integer.parseInt(age));*/
+            d.setLanguage(language);*/
+           // d.setAge(Integer.parseInt(age));
             d.setFirstName(firstName);
             d.setLastName(lastName);
+
 
         }
         catch(Exception e){

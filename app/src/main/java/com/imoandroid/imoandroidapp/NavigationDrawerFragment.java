@@ -1,7 +1,6 @@
 package com.imoandroid.imoandroidapp;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.support.v7.app.ActionBar;
@@ -16,7 +15,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,22 +22,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TabWidget;
 import android.widget.Toast;
 
-import com.imoandroid.imoandroidapp.APICallerRound2.GetPatients;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GetPatients;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientWrapper;
 import com.mashape.unirest.http.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -47,7 +43,7 @@ import java.util.concurrent.ExecutionException;
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements View.OnClickListener {
+public class NavigationDrawerFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     /**
      * Remember the position of the selected item.
@@ -98,22 +94,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Read in the flag indicating whether or not the user has demonstrated awareness of the
-        // drawer. See PREF_USER_LEARNED_DRAWER for details.
-       /* Patient newPatient = new Patient();
-        Demographics d1 = new Demographics();
-        d1.firstName = "Nam";
-        d1.lastName = "Prabhu";
-        newPatient.demo = d1;
 
-        Patient newPatient2 = new Patient();
-        Demographics d2 = new Demographics();
-        d2.firstName = "Vishal";
-        d2.lastName = "Pir";
-        newPatient2.demo = d2;
-
-        allPatients.add(newPatient);
-        allPatients.add(newPatient2);*/
 
         HttpResponse<JsonNode> patientData = null;
 
@@ -125,12 +106,10 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             e.printStackTrace();
         }
 
-        Log.v("NEWNEW--", patientData.getBody().toString());
+//        Log.v("NEWNEW--", patientData.getBody().toString());
 
         PatientParser p = new PatientParser();
         allPatients = p.parsePatients(patientData.getBody().toString());
-
-        Log.v("###", allPatients.get(0).getDemo().getFirstName());
 
         tempPatients = new ArrayList<Patient>(allPatients);
 
@@ -185,7 +164,13 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
                 List<Patient> searchPatients = new ArrayList<Patient>();
                 for(int i = 0 ; i < allPatients.size() ; i++){
                     Patient p = allPatients.get(i);
-                    if(p.getDemo().firstName.toLowerCase().contains(s) || p.getDemo().lastName.toLowerCase().contains(s)) {
+//                    Log.v("------>", p.getDemo().getFirstName());
+//                    Log.v("------>", p.getDemo().getLastName());
+
+                    Demographics d = p.getDemo();
+//                    Log.v("-->First",d.getFirstName() );
+
+                    if((d.getFirstName()).toLowerCase().contains(s) || (d.getLastName()).toLowerCase().contains(s)) {
                         searchPatients.add(p);
                     }
                 }
@@ -199,7 +184,22 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
 
             }
         });
+
+        mDrawerListView.setOnItemClickListener(this);
+
+
         return v;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        Patient p = (Patient)parent.getItemAtPosition(position);
+       // Toast.makeText(getActivity().getApplicationContext(), p.getDemo().getFirstName(), Toast.LENGTH_SHORT).show();
+       ((NavigationDrawerPatient) getActivity()).givePatientToActivity(p);
+       // Toast.makeText(getActivity().getApplicationContext(), "Does it work" + returnValue, Toast.LENGTH_SHORT).show();
+
+
     }
 
     public boolean isDrawerOpen() {
@@ -284,6 +284,7 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
+
         }
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
@@ -398,8 +399,17 @@ public class NavigationDrawerFragment extends Fragment implements View.OnClickLi
             {
                 Patient created = data.getParcelableExtra("patient");
 
-                Toast.makeText(getActivity(),created.getDemo().getFullName()+ " created",Toast.LENGTH_SHORT).show();
+                try {
+                    POSTPatientWrapper.poster(created);
+                    Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " created",Toast.LENGTH_SHORT).show();
+                    listAdapter.AddPatient(created);
+                    mDrawerListView.setSelection(0);
+                    mDrawerListView.performItemClick(mDrawerListView.getChildAt(0),0,listAdapter.getItemId(0));
 
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " Could not create!!!",Toast.LENGTH_SHORT).show();
+                }
                 //Add patient to TabHost selected
             }
             else if( resultCode == Constants.RESULT_CANCEL)

@@ -26,7 +26,7 @@ public class NavDrawerItem {
 
     public NavDrawerItem(Patient patient) {
         this.patient = patient;
-        this.title = this.patient.getDemo().getFullName();
+        this.title = this.patient.getDemo().createFullNameGenerator();
        // this.icon = icon;
     }
 
