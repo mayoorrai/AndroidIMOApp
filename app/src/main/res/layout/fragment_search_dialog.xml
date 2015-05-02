@@ -138,6 +138,7 @@
                 android:id="@+id/lvChart"
                 android:layout_margin="10dip"></ListView>
             <Button
+                android:id="@+id/bSaveChart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"

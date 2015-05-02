@@ -33,20 +33,37 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imoandroid.imoandroidapp.APICaller.APICaller;
 
+import com.imoandroid.imoandroidapp.APICallerRound2.GETTx;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.*;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class SearchDialogFragment extends DialogFragment implements AdapterView.OnItemClickListener, View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM = "param";
 
+    public final String TAG = Patient.class.getSimpleName();
+
     private int mTab;
+
+    private ArrayList<Map> items;
 
     Map[] listItems = {};
 
@@ -54,6 +71,8 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     int tally;
     private int width;
     boolean frameDisplayed;
+
+    private String source = null;
     // hacky
     private HashMap<Map,Boolean> isAdded = new HashMap<Map,Boolean>();
     private int rl;
@@ -81,6 +100,10 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     private TextView ConTerm;
     private TextView ICD9;
     private TextView ICD10;
+
+
+
+    private Button bSaveChart;
 
     /**
      * Use this factory method to create a new instance of
@@ -151,6 +174,54 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         chartFrag = v.findViewById(R.id.fragChart);
         detailsFrag = v.findViewById(R.id.fragTermDetails);
         before = detailsFrag;
+        bSaveChart = (Button) v.findViewById(R.id.bSaveChart);
+
+        bSaveChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                for(int i = 0 ; i < chartAdapter.data.size(); i++){
+
+                    Map item = (Map) chartAdapter.data.get(i);
+                   Log.v(TAG , "#$#$#$#@@@@" + item.toString());
+                    Term term = new Term();
+                    term.InterfaceTitle = item.get("title").toString();
+                    term.InterfaceCode = item.get("code").toString();
+
+                    term.InterfaceSource = source;
+                    term.AdminSource = item.get("kndg_source").toString();
+                    try {
+                        term.AdminTitle = item.get("kndg_title").toString();
+                    }catch(Exception e){
+                        term.AdminTitle = item.get("title").toString();
+                    }
+                    term.AdminCode = item.get("kndg_code").toString();
+
+
+                    switch(source){
+                        case "ProblemIT Professional" :
+                            Constants.CurrentPat.AddProblem(term);
+                            break;
+                        case "MedicationIT Core":
+                            Constants.CurrentPat.AddMedication(term);
+                            break;
+                        case "ProcedureIT Orderable":
+                            Constants.CurrentPat.AddProcedure(term);
+                            break;
+                        default:
+                            break;
+                    }
+
+
+
+
+
+                    Log.v(TAG , "#$#%%^%$&$" + Constants.CurrentPat.getDemo().createFullNameGenerator());
+
+                }
+            }
+        });
 
 
         listAdapter = new DisplayTermAdapter(getActivity().getApplicationContext(),R.layout.activity_term_holder,
@@ -213,7 +284,16 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
                 tally=0;
 
-                APICall(s.toString());
+              /*  try {
+                    APICall(s.toString());
+                }
+
+                catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }*/
+
             }
 
             @Override
@@ -282,7 +362,15 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         else if (v==submit)
         {
             closeKeyboard();
+            try{
+            Log.v(TAG , "!!!!!!!" + et.getText().toString());
             APICall(et.getText().toString());
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
         else if(v==addDetail)
         {
@@ -355,23 +443,72 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         frameView.setVisibility(View.VISIBLE);
     }
 
-    private void APICall(String s)
-    {
+    private void APICall(String s) throws ExecutionException, InterruptedException {
         ArrayList<Map> APIResults;
 
-        switch (mTab) {
-            case 0: APIResults = APICaller.DxGET(s,100);
-                break;
-            case 1: APIResults = APICaller.RxGET(s,100);
-                break;
-            case 2: //idk about Hx
-                APIResults = APICaller.RxGET(s,100);
-                break;
-            case 3: APIResults = APICaller.TxGET(s,100);
-                break;
-            default:
-                APIResults = APICaller.DxGET(s,100);
+        HttpResponse<JsonNode> allTerms = null;
+
+        try {
+
+            switch (mTab) {
+                case 0:
+                    allTerms = new GETDx().execute(s).get();
+                    break;
+                case 1:
+                    allTerms = new GETRx().execute(s).get();
+                    break;
+                case 2: //idk about Hx
+                    allTerms = new GETDx().execute(s).get();
+                    break;
+                case 3:
+                    allTerms = new GETTx().execute(s).get();
+                    break;
+                default:
+                    allTerms = new GETDx().execute(s).get();
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
+
+        JSONObject jsonObject = allTerms.getBody().getObject();
+
+
+        try {
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> jsonMap = mapper.readValue(allTerms.getRawBody(), Map.class);
+            Map data = (Map) jsonMap.get("data");
+
+            switch(data.get("source").toString()){
+                case "ProblemIT" :
+                    source = "ProblemIT Professional";
+                    break;
+                case "MedicationIT":
+                    source = "MedicationIT Core";
+                    break;
+                case "ProcedureIT":
+                    source = "ProcedureIT Orderable";
+                    break;
+                default:
+                    source = null;
+                    break;
+            }
+
+            items = (ArrayList<Map>) data.get("items");
+
+        }
+        catch(JsonMappingException e){
+
+        }catch(JsonParseException e){
+
+        }catch(IOException e){
+
+        }
+
+        APIResults = items;
 
         termSelected = -1;
 

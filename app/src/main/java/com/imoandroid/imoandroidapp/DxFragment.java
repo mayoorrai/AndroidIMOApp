@@ -93,5 +93,8 @@ public  class DxFragment extends Fragment {
         adapter.UpdateTerms(p.getProblems());
         border.setVisibility(p.getProblems().size()>0? View.VISIBLE: View.GONE);
         Log.v(TAG , "%%%%%%%%%" + p.getProblems().size());
+        if(p.getProblems().size() > 0) {
+            Log.v(TAG, "^^^^^^^^^^^^" + p.getProblems().get(0).InterfaceTitle);
+        }
     }
 }

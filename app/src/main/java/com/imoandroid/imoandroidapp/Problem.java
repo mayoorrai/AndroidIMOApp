@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * Created by namrataprabhu on 4/11/15.
  */
-public class Problem implements Parcelable{
+public class Problem extends Term implements Parcelable{
 
     public String InterfaceSource;
     public String InterfaceCode;
@@ -14,6 +14,9 @@ public class Problem implements Parcelable{
     public String AdminSource;
     public String AdminCode;
     public String AdminTitle;
+
+
+
 
     public Problem(){
 
