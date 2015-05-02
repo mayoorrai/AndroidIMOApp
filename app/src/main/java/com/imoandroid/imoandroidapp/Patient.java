@@ -3,6 +3,7 @@ package com.imoandroid.imoandroidapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.print.PrintAttributes;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,8 @@ import java.util.Date;
 public class Patient implements Parcelable{
 	// Sammy wrote code!
     // Basic Patient Details
+
+    public final String TAG = Patient.class.getSimpleName();
 
     private Demographics demo;
 
@@ -87,7 +90,7 @@ public class Patient implements Parcelable{
     public void AddProblem(Term p)
     {
         problems.add(p);
-        //notify?
+        Log.v(TAG , "&^&^&^&^&" + p.InterfaceTitle);
     }
 
     public void AddProcedure(Term p)
