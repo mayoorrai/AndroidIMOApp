@@ -32,6 +32,10 @@
     <string name="strHome">Home Phone</string>
     <string name="strOffice">Office Phone</string>
     // Notes        <string name="strNotes">Notes</string>
+    <string-array name="sorts">
+        <item>Sort By Name</item>
+        <item>Sort By Age</item>
+    </string-array>
     // Colors        <color name="white">#FFFFFF</color>
     <color name="cyan">#2299ff</color>
 

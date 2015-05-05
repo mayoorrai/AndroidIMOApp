@@ -1,5 +1,8 @@
 package com.imoandroid.imoandroidapp;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
@@ -26,6 +29,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,6 +38,7 @@ import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPa
 import com.mashape.unirest.http.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import java.util.concurrent.ExecutionException;
@@ -46,8 +51,13 @@ import java.util.concurrent.ExecutionException;
 public class NavigationDrawerFragment extends Fragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     /**
-     * Remember the position of the selected item.
+     *
+     *
      */
+
+    public final String TAG = Patient.class.getSimpleName();
+
+
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
 
     /**
@@ -72,6 +82,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
     private EditText patientSearch;
     private View mFragmentContainerView;
     private ImageButton clear;
+    private Spinner sorts;
 
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
@@ -83,12 +94,8 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
     private List<Patient> tempPatients = new ArrayList<Patient>();
 
-
-
     public NavigationDrawerFragment() {
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,10 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
 
         HttpResponse<JsonNode> patientData = null;
+
+
+
+
 
         try {
             patientData = new GetPatients().execute().get();
@@ -143,6 +154,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         patientSearch = (EditText) v.findViewById(R.id.etPatients);
         createButton = (Button) v.findViewById(R.id.addPatientButton);
         createButton.setOnClickListener(this);
+        sorts = (Spinner)v.findViewById(R.id.spinSort);
         clear = (ImageButton)v.findViewById(R.id.clearPat);
         clear.setVisibility(View.GONE);
         clear.setOnClickListener(this);
@@ -174,9 +186,9 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                         searchPatients.add(p);
                     }
                 }
-                listAdapter.data.clear();
-                listAdapter.addAll(searchPatients);
-                listAdapter.notifyDataSetChanged();
+                Collections.sort(searchPatients,sorts.getSelectedItemPosition() == 0 ?
+                        new Constants.NameComp():new Constants.AgeComparator());
+                listAdapter.updateDisplay((ArrayList<Patient>)searchPatients);
             }
 
             @Override
@@ -186,6 +198,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         });
 
         mDrawerListView.setOnItemClickListener(this);
+
 
 
         return v;

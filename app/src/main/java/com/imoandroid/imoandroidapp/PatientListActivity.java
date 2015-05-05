@@ -374,6 +374,8 @@ getActionBar().setHomeButtonEnabled(true);
             isAvailable = true;
         }
         return isAvailable;
+
+
     }
 
 

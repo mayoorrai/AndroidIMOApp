@@ -1,6 +1,11 @@
 package com.imoandroid.imoandroidapp;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Created by mayoorrai on 2/8/15.
@@ -38,4 +43,48 @@ public class Constants {
     public static final int RX_TAB = 1;
     public static final int HX_TAB = 2;
     public static final int TX_TAB = 3;
+
+    public static boolean isNetworkAvailable(Object param) {
+        ConnectivityManager manager = (ConnectivityManager) param;
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+        return isAvailable;
+    }
+
+    public static class AgeComparator implements Comparator{
+
+        @Override
+        public int compare(Object lhs, Object rhs) {
+            Patient a = (Patient) lhs;
+            Patient b = (Patient) rhs;
+
+            if(a.Age() > b.Age()){
+                return 1;
+            }
+            else if (a.Age() < b.Age()){
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        }
+    }
+
+    public static class NameComp implements Comparator{
+
+        @Override
+        public int compare(Object lhs, Object rhs) {
+            Patient a = (Patient) lhs;
+            Patient b = (Patient) rhs;
+
+            String l = a.getDemo().createFullNameGenerator();
+            String r = b.getDemo().createFullNameGenerator();
+
+            return l.compareTo(r);
+        }
+    }
 }

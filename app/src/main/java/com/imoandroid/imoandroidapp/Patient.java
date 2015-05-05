@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Patient implements Parcelable{
@@ -133,4 +134,24 @@ public class Patient implements Parcelable{
             return new Patient[size];
         }
     };
+
+    public int Age()
+    {
+        Calendar bday = Calendar.getInstance();
+        try {
+            bday.setTimeInMillis(Long.parseLong(this.demo.DOB.toString()));
+        }
+        catch (Exception e)
+        {
+            return 200;
+        }
+
+        Calendar today = Calendar.getInstance();
+        int _age = today.get(Calendar.YEAR) - bday.get(Calendar.YEAR);
+        if(today.get(Calendar.DAY_OF_YEAR) <= bday.get(Calendar.DAY_OF_YEAR))
+        {
+            _age--;
+        }
+        return _age;
+    }
 }
