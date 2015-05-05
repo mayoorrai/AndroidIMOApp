@@ -1,6 +1,8 @@
 package com.imoandroid.imoandroidapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.support.v4.app.FragmentTabHost;
@@ -51,6 +53,12 @@ public class NavigationDrawerPatient extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!Constants.isNetworkAvailable(getSystemService(Context.CONNECTIVITY_SERVICE))){
+            SystemClock.sleep(2000);
+            finish();
+            System.exit(0);
+        }
 
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

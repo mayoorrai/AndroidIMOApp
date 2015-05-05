@@ -446,6 +446,13 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
     private void APICall(String s) throws ExecutionException, InterruptedException {
         ArrayList<Map> APIResults;
 
+        if(!Constants.isNetworkAvailable(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))){
+            Toast.makeText(getActivity().getApplicationContext() , "NO NETWORK >:" , Toast.LENGTH_LONG);
+            SystemClock.sleep(2000);
+            getActivity().finish();
+            System.exit(0);
+        }
+
         HttpResponse<JsonNode> allTerms = null;
 
         try {

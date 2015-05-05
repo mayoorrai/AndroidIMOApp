@@ -32,6 +32,15 @@ public class DisplayPatientAdapter extends ArrayAdapter<Patient> {
         notifyDataSetChanged();
     }
 
+    public void updateDisplay(ArrayList<Patient> update)
+    {
+        data.clear();
+        for(int i=0;i<update.size();i++){
+            data.add(update.get(i));
+        }
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public View getView(int position, View child, ViewGroup parent) {
