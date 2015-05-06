@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.imoandroid.imoandroidapp.APICaller.APICaller;
@@ -44,6 +45,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -201,7 +203,13 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
 
                     switch(source){
                         case "ProblemIT Professional" :
-                            Constants.CurrentPat.AddProblem(term);
+                            try {
+                                Constants.CurrentPat.AddProblem(term);
+                            } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             break;
                         case "MedicationIT Core":
                             Constants.CurrentPat.AddMedication(term);

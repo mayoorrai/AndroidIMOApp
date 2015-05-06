@@ -3,7 +3,13 @@ package com.imoandroid.imoandroidapp;
 import android.nfc.Tag;
 import android.util.Log;
 
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GETSpecificPatient;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GetPatients;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -13,6 +19,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by namrataprabhu on 4/11/15.
@@ -27,7 +34,7 @@ public class PatientParser {
         char[] inputBuffer = new char[256];
         JSONArray jsonPatientArray = null;
         JSONObject jsonPatients = null;
-        JSONObject jsonNewPatient = null;
+        JSONObject jsonPatient = null;
 
         ArrayList<Patient> allPatients = new ArrayList<Patient>();
 
@@ -42,44 +49,34 @@ public class PatientParser {
                     String lastName = getPatient.getString("last_name");
                     String firstName = getPatient.getString("first_name");
                     String id = getPatient.getString("id");
-                    if(firstName.equals("melinda")) {
-                        Log.v(TAG , "-----INMELINDA");
-                        URL patientDetailsURL = new URL("http://66.252.70.193/patients?firstName=melinda&lastName=test&id=1&apiKey=FSdgvuujDNpD1YPVjN95XcSFXBdsVwf66qeijgZDdwkji6GiyqYoKw15JRPywYV5");
-                        HttpURLConnection connection = (HttpURLConnection) patientDetailsURL.openConnection();
-                        connection.connect();
-                        responseCode = connection.getResponseCode();
-                        if (responseCode == HttpURLConnection.HTTP_OK) {
-                            InputStream inputStream = connection.getInputStream();
-                            String newResponseData = slurp(inputStream, inputBuffer);
-                            jsonNewPatient = new JSONObject(newResponseData);
-                            JSONObject patientDetails = jsonNewPatient.getJSONObject("Patient");
-                            Log.v(TAG, "-----" + patientDetails);
-                           p.setProblems(setUpProblems(patientDetails));
-                            Log.v(TAG, "--------" + p.getProblems().size());
-                            p.setMedications(setUpMedications(patientDetails));
-                            p.setProcedures(setUpProcedures(patientDetails));
-                            p.setDemo(setUpDemographics(patientDetails));
-                            Log.v(TAG , "%%%%%%%" + p.getDemo().getLastName());
-                            p.getDemo().setId(Integer.parseInt(id));
-                            allPatients.add(p);
-                        }
-                    }
-                    else{
-                        Log.v("** FIRSTNAME:", firstName);
 
-                        Demographics d = new Demographics();
-                        d.setFirstName(firstName);
-                        d.setLastName(lastName);
-                        d.setId(Integer.parseInt(id));
-                        p.setDemo(d);
-                        allPatients.add(p);
-                    }
+
+                    HttpResponse<JsonNode> patientData = new GETSpecificPatient().execute(firstName , lastName , id).get();
+                    String patientInfo = patientData.getBody().toString();
+
+                    jsonPatient = new JSONObject(patientInfo);
+                    JSONObject patientDetails = jsonPatient.getJSONObject("Patient");
+
+                    p.setDemo(setUpDemographics(patientDetails));
+                    p.getDemo().setId(Integer.parseInt(id));
+                    p.setProblems(setUpProblems(patientDetails));
+                    p.setMedications(setUpMedications(patientDetails));
+                    p.setProcedures(setUpProcedures(patientDetails));
+
+                    allPatients.add(p);
                 }
 
+
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        } catch (ExecutionException e1) {
+            e1.printStackTrace();
+        } catch (JSONException e1) {
+            e1.printStackTrace();
         }
-            catch(Exception e){
-                return allPatients;
-            }
+
+
+
 
     return allPatients;
 
@@ -158,17 +155,26 @@ public class PatientParser {
         try{
             JSONObject address = demographics.getJSONObject("Address");
 
-                newAddress.setAddress1(address.getString("address1"));
-                newAddress.setAddress2(address.getString("address2"));
-                newAddress.setCity(address.getString("city"));
-                newAddress.setState(address.getString("state"));
-                newAddress.setZip(Integer.parseInt(address.getString("zip")));
-                newAddress.setHomePhone(Long.parseLong(address.getString("home")));
-                newAddress.setMobilePhone(Long.parseLong(address.getString("mobile")));
-                newAddress.setOfficePhone(Long.parseLong(address.getString("office")));
+                newAddress.setAddress1(address.getString("Address1"));
+                try{
+
+                    newAddress.setAddress2(address.getString("Address2"));
+                }
+                catch(Exception e){
+
+                }
+
+                newAddress.setCity(address.getString("City"));
+                newAddress.setState(address.getString("State"));
+                newAddress.setZip(Integer.parseInt(address.getString("Zip")));
+                // API doesn't support phone numbers :'(
+                //newAddress.setHomePhone(Long.parseLong(address.getString("home")));
+                //newAddress.setMobilePhone(Long.parseLong(address.getString("mobile")));
+                //newAddress.setOfficePhone(Long.parseLong(address.getString("office")));
 
 
         } catch(Exception e){
+            Log.v(TAG , "^%^%^%^%");
             return new PatientAddress();
         }
 
@@ -182,18 +188,18 @@ public class PatientParser {
         try {
             demographics = patientDetails.getJSONObject("Demographics");
             String lastName = demographics.getString("LastName");
+            d.setLastName(lastName);
             String firstName = demographics.getString("FirstName");
-           //String age = demographics.getString("Age");
-         /*   String language = demographics.getString("Language");
-            String gender = demographics.getString("Gender");
-
-
-           Insurance insurance1 = setUpInsurance(demographics);
-           d.setInsurance(insurance1);
-
-           PatientAddress newAddress = setUpAddress(demographics);
-            d.setAddress(newAddress);
-
+            d.setFirstName(firstName);
+            String language = demographics.getString("Language");
+            d.setLanguage(language);
+            String gender;
+            try {
+                gender = demographics.getString("Gender");
+            }
+            catch(Exception e){
+                gender = "M";
+            }
             if (gender.equals("M")) {
                 d.set_gender(Demographics.Gender.M);
             }
@@ -203,16 +209,17 @@ public class PatientParser {
             else {
                 d.set_gender(Demographics.Gender.Other);
             }
-            d.setLanguage(language);*/
-           // d.setAge(Integer.parseInt(age));
-            d.setFirstName(firstName);
-            d.setLastName(lastName);
 
+           /*Insurance insurance1 = setUpInsurance(demographics);
+           d.setInsurance(insurance1);*/
+
+           PatientAddress newAddress = setUpAddress(demographics);
+           d.setAddress(newAddress);
 
         }
         catch(Exception e){
 
-            return d;
+            e.printStackTrace();
 
         }
         return d;
@@ -224,29 +231,8 @@ public class PatientParser {
 //        p.parsePatients("");
     }
 
-    protected String slurp(InputStream is, char[] buffer) throws IOException {
-        StringBuilder out = new StringBuilder();
-        Reader in = null;
 
-        try {
 
-            in = new InputStreamReader(is, "UTF-8");
-            for (;;) {
-                int rsz = in.read(buffer, 0, buffer.length);
-                if (rsz < 0) {
-                    break;
-                }
-                out.append(buffer, 0, rsz);
-            }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-            in = null;
-        }
-
-        return out.toString();
-    }
 
 
 }

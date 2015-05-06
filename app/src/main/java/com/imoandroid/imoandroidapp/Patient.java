@@ -5,6 +5,11 @@ import android.os.Parcelable;
 import android.print.PrintAttributes;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientDxWrapper;
+
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -88,9 +93,9 @@ public class Patient implements Parcelable{
         medications = new ArrayList<Term>();
     }
 
-    public void AddProblem(Term p)
-    {
+    public void AddProblem(Term p) throws JsonProcessingException, JSONException {
         problems.add(p);
+        POSTPatientDxWrapper.poster(Constants.CurrentPat, p);
         Log.v(TAG , "&^&^&^&^&" + p.InterfaceTitle);
     }
 

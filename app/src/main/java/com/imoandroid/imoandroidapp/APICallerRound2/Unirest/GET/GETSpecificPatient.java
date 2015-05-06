@@ -16,6 +16,8 @@ public class GETSpecificPatient extends AsyncTask<String, Integer, HttpResponse<
     protected HttpResponse<JsonNode> doInBackground(String... msg) {
         HttpResponse<JsonNode> request = null;
 
+        Log.v("MSG: " , msg[0]);
+
         try {
             request = Unirest.get("http://66.252.70.193/{method}")
                     .routeParam("method","patients")
@@ -28,6 +30,8 @@ public class GETSpecificPatient extends AsyncTask<String, Integer, HttpResponse<
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
+        Log.v("REQUEST: " , request.toString());
 
         return request;
     }
