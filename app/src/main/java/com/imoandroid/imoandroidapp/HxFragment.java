@@ -27,6 +27,8 @@ public  class HxFragment extends Fragment {
     DisplayPTAdapter adapter;
     Patient p;
 
+    TextView type;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,9 @@ public  class HxFragment extends Fragment {
         p = Constants.CurrentPat;
 
         Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
+
+        type = (TextView)v.findViewById(R.id.fragment_type);
+        type.setText("HISTORY");
 
 
         patientName = (TextView)v.findViewById(R.id.fragment_patientName);

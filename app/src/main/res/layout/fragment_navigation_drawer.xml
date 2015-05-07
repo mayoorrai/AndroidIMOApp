@@ -3,7 +3,7 @@
       android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-    android:background="@color/imo_button"
+    android:background="@color/black"
     tools:context="com.imoandroid.imoandroidapp.NavigationDrawerFragment">
 
     <Button
@@ -11,7 +11,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/addPatientButton"
         android:text="Add New Patient"
-        android:layout_margin="3dp"/>
+
+        android:textColor="@color/black"
+        android:background="#aaa"
+        />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -46,14 +49,24 @@
                 android:src="@drawable/mag"/>
         </RelativeLayout>
 
-        <Spinner
-            android:id="@+id/spinSort"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@color/imo_back"
-            android:layout_margin="2dp"
-            android:entries="@array/sorts"
-            ></Spinner>
+            android:layout_height="35dp">
+            <Spinner
+                android:id="@+id/spinSort"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="#aaa"
+                android:entries="@array/sorts"
+                ></Spinner>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:src="@android:drawable/arrow_down_float"/>
+        </RelativeLayout>
+
 
         </LinearLayout>
 
@@ -63,7 +76,7 @@
     android:layout_width="match_parent"
     android:id="@+id/patientLV"
     android:layout_height="match_parent" android:choiceMode="singleChoice"
-    android:divider="@android:color/transparent" android:dividerHeight="0dp"
-    android:background="@color/imo_tint" />
+    android:divider="@color/black" android:dividerHeight=".5dp"
+    android:background="#555" />
 
 </LinearLayout>

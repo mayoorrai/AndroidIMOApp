@@ -27,6 +27,7 @@ public  class DxFragment extends Fragment {
     TextView patientId;
     TextView patientAddress;
     ListView terms;
+    TextView type;
     View border;
     DisplayPTAdapter adapter;
     Patient p;
@@ -50,6 +51,9 @@ public  class DxFragment extends Fragment {
         p = Constants.CurrentPat;
 
         Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
+
+        type = (TextView)v.findViewById(R.id.fragment_type);
+        type.setText("PROBLEMS");
 
 
         patientName = (TextView)v.findViewById(R.id.fragment_patientName);

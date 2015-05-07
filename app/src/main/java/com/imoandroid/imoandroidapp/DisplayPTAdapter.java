@@ -42,7 +42,6 @@ public class DisplayPTAdapter extends ArrayAdapter<Term> {
     {
         TextView code;
         TextView title;
-        boolean setWhite = position % 2 == 0;
         if(child == null)
         {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -53,14 +52,14 @@ public class DisplayPTAdapter extends ArrayAdapter<Term> {
         Term t =  data.get(position);
         code.setText(t.AdminCode);
         title.setText(t.InterfaceTitle);
-        if(setWhite)
-        {
-            child.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        }
-        else
-        {
-            child.setBackgroundColor(mContext.getResources().getColor(R.color.light_blue));
-        }
+//        if(setWhite)
+//        {
+//            child.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+//        }
+//        else
+//        {
+//            child.setBackgroundColor(mContext.getResources().getColor(R.color.black));
+//        }
 
         return child;
     }

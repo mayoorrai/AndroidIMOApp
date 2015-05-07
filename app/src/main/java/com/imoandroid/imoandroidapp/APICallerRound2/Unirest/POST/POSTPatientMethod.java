@@ -12,19 +12,20 @@ import com.mashape.unirest.http.exceptions.UnirestException;
  * Created by samarthchopra on 4/12/15.
  */
 // == WORKS == => yet to test with actual patient object, though should be able to pass that in body
-public class POSTPatientDx extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
+public class POSTPatientMethod extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
 
     protected HttpResponse<JsonNode> doInBackground(String... msg) {
         HttpResponse<JsonNode> request = null;
 
         try {
-            HttpResponse<String> back = Unirest.post("http://66.252.70.193/patients/{id}/{first}/{last}/dx")
+            HttpResponse<String> back = Unirest.post("http://66.252.70.193/patients/{id}/{first}/{last}/{method}")
                     .header("accept", "application/json")
                     .routeParam("id", msg[0])
                     .routeParam("first", msg[1])
                     .routeParam("last", msg[2])
+                    .routeParam("method" , msg[3])
                     .queryString("apiKey", "QhIno484vsazggxvZgf2EGZjkYunH24f7MNz5JXmI83bDMTOgmwVw6eqss7I18U7")
-                    .body(msg[3])
+                    .body(msg[4])
                     .asString();
 
             Log.v("MSG0", msg[0]);

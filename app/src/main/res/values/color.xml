@@ -14,7 +14,9 @@
     <color name="black">#000000</color>
     <color name="light_green">#98FB98</color>
     <color name="light_blue">#90e2f5</color>
-    <color name="imo_back">#377efa</color>
+    <color name="imo_back">#333</color>
     <color name="imo_button">#909ef5</color>
     <color name="imo_tint">#d5d9f5</color>
+    <color name="gray">#333</color>
+    <color name="imo_background_color">#0D4974</color>
 </resources>

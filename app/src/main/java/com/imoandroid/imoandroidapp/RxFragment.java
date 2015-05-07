@@ -27,9 +27,12 @@ public  class RxFragment extends Fragment {
     TextView patientId;
     TextView patientAddress;
     ListView terms;
+
     View border;
     DisplayPTAdapter adapter;
     Patient p;
+
+    TextView type;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,9 @@ public  class RxFragment extends Fragment {
         p = Constants.CurrentPat;
 
         Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
+
+        type = (TextView)v.findViewById(R.id.fragment_type);
+        type.setText("MEDICATIONS");
 
 
         patientName = (TextView)v.findViewById(R.id.fragment_patientName);

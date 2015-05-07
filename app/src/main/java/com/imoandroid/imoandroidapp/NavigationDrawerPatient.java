@@ -148,6 +148,12 @@ public class NavigationDrawerPatient extends ActionBarActivity
         // set Dx tab as default*/
         mTabHost.setCurrentTab(0);
 
+        for(int i=0;i<tabWidget.getChildCount();i++)
+        {
+            TextView tv = (TextView) tabWidget.getChildAt(i).findViewById(android.R.id.title);
+            tv.setTextColor(getResources().getColor(R.color.white));
+        }
+
         //Log.v(TAG , "Current tab is " + mTabHost.getChildAt(5).toString());
     }
 
