@@ -212,10 +212,24 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
                             }
                             break;
                         case "MedicationIT Core":
-                            Constants.CurrentPat.AddMedication(term);
+                            try {
+                                Constants.CurrentPat.AddMedication(term);
+                            } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
                         case "ProcedureIT Orderable":
-                            Constants.CurrentPat.AddProcedure(term);
+                            try {
+                                Constants.CurrentPat.AddProcedure(term);
+                            } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                             break;
                         default:
                             break;

@@ -30,6 +30,8 @@ public  class TxFragment extends Fragment {
     DisplayPTAdapter adapter;
     Patient p;
 
+    TextView type;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,9 @@ public  class TxFragment extends Fragment {
         p = Constants.CurrentPat;
 
         Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
+
+        type = (TextView)v.findViewById(R.id.fragment_type);
+        type.setText("PROCEDURES");
 
 
         patientName = (TextView)v.findViewById(R.id.fragment_patientName);

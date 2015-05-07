@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientDxWrapper;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientRxWrapper;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientTxWrapper;
 
 import org.json.JSONException;
 
@@ -96,17 +98,20 @@ public class Patient implements Parcelable{
     public void AddProblem(Term p) throws JsonProcessingException, JSONException {
         problems.add(p);
         POSTPatientDxWrapper.poster(Constants.CurrentPat, p);
-        Log.v(TAG , "&^&^&^&^&" + p.InterfaceTitle);
+
     }
 
-    public void AddProcedure(Term p)
+    public void AddProcedure(Term p) throws JsonProcessingException, JSONException
     {
         procedures.add(p);
+        POSTPatientTxWrapper.poster(Constants.CurrentPat, p);
+
     }
 
-    public void AddMedication(Term p)
+    public void AddMedication(Term p) throws JsonProcessingException, JSONException
     {
         medications.add(p);
+        POSTPatientRxWrapper.poster(Constants.CurrentPat, p);
     }
 
     public void setDemo(Demographics d)
