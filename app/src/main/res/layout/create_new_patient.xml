@@ -7,14 +7,14 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="#eee"
         android:padding="12dp">
 
         <RelativeLayout
             android:id="@+id/basicPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cyan"
+            android:background="@color/jordy_blue"
             android:padding="12dp"
             android:layout_marginBottom="25dp">
 
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/cyan"
                 android:hint="@string/strLastName"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_below="@+id/firstNameBox"
                 android:background="@color/white"
                 android:padding="5dp"
@@ -56,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:text="Date of Birth:           "
                 android:layout_below="@+id/lastNameBox"
                 android:padding="5dp"
@@ -67,8 +67,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/lastNameBox"
+                android:background="@color/imo_background_color"
+                android:textColor="@color/white"
                 android:text="Set Date"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_toRightOf="@id/tvDate"
                 android:layout_alignBaseline="@+id/tvDate"
                 android:padding="1dp"
@@ -80,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:text="@string/strAge"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:layout_below="@+id/tvDate"
                 android:padding="5dp"
                 android:layout_margin="7dp"/>
@@ -118,7 +120,7 @@
             android:id="@+id/addressPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cyan"
+            android:background="@color/jordy_blue"
             android:padding="12dp"
             android:layout_below="@id/basicPanel"
             android:layout_marginBottom="25dp">
@@ -241,7 +243,7 @@
             android:id="@+id/notesPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cyan"
+            android:background="@color/jordy_blue"
             android:padding="12dp"
             android:layout_below="@id/addressPanel"
             android:layout_marginBottom="25dp">
@@ -276,7 +278,7 @@
             android:layout_height="wrap_content"
             android:text="@string/strFinish"
             android:textColor="@color/white"
-            android:background="@color/cyan"
+            android:background="@color/imo_background_color"
             android:padding="5dp"
             android:layout_below="@id/notesPanel"
             android:layout_alignRight="@id/notesPanel"/>
