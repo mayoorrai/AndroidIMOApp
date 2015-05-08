@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -58,6 +59,7 @@ public class Demographics implements Parcelable{
         this.id = in.readInt();
         this.address = in.readParcelable(PatientAddress.class.getClassLoader());
         this.insurance = in.readParcelable(Insurance.class.getClassLoader());
+        this.updateAge();
     }
 
     public static final Parcelable.Creator<Demographics> CREATOR
@@ -196,6 +198,7 @@ public class Demographics implements Parcelable{
 
     public void setDOB(long time) {
         this.DOB = new Date(time);
+        updateAge();
     }
 
     public String createFullNameGenerator() {
@@ -216,5 +219,18 @@ public class Demographics implements Parcelable{
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    private void updateAge() {
+        Calendar bday = Calendar.getInstance();
+        bday.setTimeInMillis(DOB.getTime());
+
+        Calendar today = Calendar.getInstance();
+        int _age = today.get(Calendar.YEAR) - bday.get(Calendar.YEAR);
+        if(today.get(Calendar.DAY_OF_YEAR) <= bday.get(Calendar.DAY_OF_YEAR))
+        {
+            _age--;
+        }
+        age = _age;
     }
 }

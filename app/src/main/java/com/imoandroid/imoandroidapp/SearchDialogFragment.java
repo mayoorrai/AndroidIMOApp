@@ -460,7 +460,7 @@ public class SearchDialogFragment extends DialogFragment implements AdapterView.
         searchView.setLayoutParams(params);
 
         params = frameView.getLayoutParams();
-        params.width = width*2/3;
+        params.width = width*2/3+5;
         frameView.setLayoutParams(params);
         frameView.setVisibility(View.VISIBLE);
     }

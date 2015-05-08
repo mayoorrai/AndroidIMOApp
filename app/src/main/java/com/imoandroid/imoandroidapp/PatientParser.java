@@ -193,6 +193,8 @@ public class PatientParser {
             d.setFirstName(firstName);
             String language = demographics.getString("Language");
             d.setLanguage(language);
+            Long dob = demographics.getLong("DOB");
+            d.setDOB(dob);
             String gender;
             try {
                 gender = demographics.getString("Gender");

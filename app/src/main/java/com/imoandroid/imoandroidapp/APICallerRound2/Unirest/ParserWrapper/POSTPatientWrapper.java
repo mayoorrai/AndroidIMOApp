@@ -11,13 +11,14 @@ import com.imoandroid.imoandroidapp.Demographics;
 import com.imoandroid.imoandroidapp.Patient;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by samarthchopra on 4/14/15.
  */
 public class POSTPatientWrapper {
 
-    public static void poster(Patient p) throws JsonProcessingException {
+    public static String poster(Patient p) throws JsonProcessingException {
         Demographics demo = p.getDemo();
         ObjectMapper mapper = new ObjectMapper();
         String back = null;
@@ -26,8 +27,14 @@ public class POSTPatientWrapper {
 
         Log.v("Poster", back);
 
-        new POSTPatient().execute(back);
-
+        try {
+            return new POSTPatient().execute(back).get().getBody();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return "Failed to create patient";
     }
 
 }

@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public  class DxFragment extends Fragment {
 
-
     public final String TAG = DxFragment.class.getSimpleName();
 
     TextView patientName;
@@ -29,6 +28,13 @@ public  class DxFragment extends Fragment {
     ListView terms;
     TextView type;
     View border;
+    View header;
+    Button add;
+    Button remove;
+    Button send;
+    Button sort;
+    Button edit;
+    Button save;
     DisplayPTAdapter adapter;
     Patient p;
 
@@ -50,7 +56,12 @@ public  class DxFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_dx, container, false);
         p = Constants.CurrentPat;
 
-        Button btnSearch = (Button) v.findViewById(R.id.btnAdd);
+        add = (Button) v.findViewById(R.id.btnAdd);
+        remove = (Button) v.findViewById(R.id.btnRemove);
+        send = (Button) v.findViewById(R.id.btnBilling);
+        sort = (Button) v.findViewById(R.id.btnSort);
+        edit = (Button) v.findViewById(R.id.btnEdit);
+        save = (Button) v.findViewById(R.id.btnSave);
 
         type = (TextView)v.findViewById(R.id.fragment_type);
         type.setText("PROBLEMS");
@@ -62,6 +73,7 @@ public  class DxFragment extends Fragment {
         patientAddress = (TextView)v.findViewById(R.id.fragment_patientLocation);
         terms = (ListView)v.findViewById(R.id.lvTerm);
         border = v.findViewById(R.id.listBorder);
+        header = v.findViewById(R.id.termHeader);
         ArrayList<Term> aTerms = p == null ? new ArrayList<Term>() :p.getProblems();
         adapter = new DisplayPTAdapter(getActivity().getApplicationContext(),R.layout.activity_term_display,
                 new ArrayList<Term>());
@@ -71,7 +83,7 @@ public  class DxFragment extends Fragment {
 
         updateFields();
 
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -87,8 +99,16 @@ public  class DxFragment extends Fragment {
     private void updateFields(){
         if(p == null){
             border.setVisibility(View.GONE);
+            header.setVisibility(View.GONE);
+            add.setEnabled(false);
+            remove.setEnabled(false);
+            send.setEnabled(false);
+            sort.setEnabled(false);
+            edit.setEnabled(false);
+            save.setEnabled(false);
             return;
         }
+        add.setEnabled(true);
         String s = p.getDemo().createFullNameGenerator();
         patientName.setText(s.length()==0 ? "Patient Name":s);
         patientAge.setText("Age: "+String.valueOf(p.getDemo().getAge()));
@@ -96,6 +116,7 @@ public  class DxFragment extends Fragment {
         patientAddress.setText("Address: "+p.getDemo().getAddress().getAddress1());
         adapter.UpdateTerms(p.getProblems());
         border.setVisibility(p.getProblems().size()>0? View.VISIBLE: View.GONE);
+        header.setVisibility(p.getProblems().size()>0? View.VISIBLE: View.GONE);
         Log.v(TAG , "%%%%%%%%%" + p.getProblems().size());
         if(p.getProblems().size() > 0) {
             Log.v(TAG, "^^^^^^^^^^^^" + p.getProblems().get(0).InterfaceTitle);

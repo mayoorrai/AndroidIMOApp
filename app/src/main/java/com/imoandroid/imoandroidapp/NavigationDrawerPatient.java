@@ -83,7 +83,6 @@ public class NavigationDrawerPatient extends ActionBarActivity
     }
 
 
-
     public void initializeTabs(final Patient p) {
         // Initialize tabhost (parent)
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
@@ -96,7 +95,6 @@ public class NavigationDrawerPatient extends ActionBarActivity
 
 
         // Dx tab
-
         Bundle b = new Bundle();
 
         if(p != null){

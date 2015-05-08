@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,17 +26,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.imoandroid.imoandroidapp.APICaller.APICaller;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.DELETE.DELETEPatient;
+import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GETSpecificPatient;
 import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.GET.GetPatients;
 import com.imoandroid.imoandroidapp.APICallerRound2.Unirest.ParserWrapper.POSTPatientWrapper;
 import com.mashape.unirest.http.*;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -198,8 +208,6 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         });
 
         mDrawerListView.setOnItemClickListener(this);
-
-
 
         return v;
     }
@@ -399,6 +407,41 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
             i.putExtra("create",true);
             startActivityForResult(i,1);
         }
+        else {
+            final Patient del = (Patient) v.getTag();
+            final Demographics demo = del.getDemo();
+            Log.v(TAG,"TO DELETE: "+demo.createFullNameGenerator()+"- "+String.valueOf(demo.getId()));
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Delete patient")
+                    .setMessage("Are you sure you want to delete "+demo.createFullNameGenerator()+"?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            HttpResponse<String> response;
+                            try{
+                                response = new DELETEPatient().execute(demo.getFirstName(),demo.getLastName(),
+                                        String.valueOf(demo.getId())).get();
+                                Log.v(TAG,"DELETION STATUS: "+response.getBody());
+                                if(response.getBody().contains("success"))
+                                {
+                                    listAdapter.RemovePatient(del);
+                                    return;
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            Toast.makeText(getActivity(),"Could not delete patient!",Toast.LENGTH_SHORT);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     @Override
@@ -413,11 +456,38 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                 Patient created = data.getParcelableExtra("patient");
 
                 try {
-                    POSTPatientWrapper.poster(created);
-                    Toast.makeText(getActivity(),created.getDemo().createFullNameGenerator()+ " created",Toast.LENGTH_SHORT).show();
-                    listAdapter.AddPatient(created);
-                    mDrawerListView.setSelection(0);
-                    mDrawerListView.performItemClick(mDrawerListView.getChildAt(0),0,listAdapter.getItemId(0));
+                    String msg = POSTPatientWrapper.poster(created);
+                    if(msg.contains("success")) {
+                        Demographics demo = created.getDemo();
+                        HttpResponse<JsonNode> patientData;
+                        JSONArray array;
+                        try {
+                            patientData = new GetPatients().execute().get();
+                            JSONObject json = new JSONObject(patientData.getBody().toString());
+                            array = json.getJSONArray("patients");
+                            for(int i = 0;i<array.length();i++)
+                            {
+                                JSONObject patient = array.getJSONObject(i);
+
+                                if(patient.getString("first_name").equals(demo.getFirstName()) &&
+                                        patient.getString("last_name").equals(demo.getLastName()))
+                                {
+                                    created.getDemo().setId(patient.getInt("id"));
+                                }
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Toast.makeText(getActivity(), created.getDemo().createFullNameGenerator() + " created", Toast.LENGTH_SHORT).show();
+                        listAdapter.AddPatient(created);
+                        mDrawerListView.setSelection(0);
+                        mDrawerListView.performItemClick(mDrawerListView.getChildAt(0), 0, listAdapter.getItemId(0));
+                    }
 
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
@@ -430,5 +500,76 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                 Toast.makeText(getActivity(),"Did not create patient",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public class DisplayPatientAdapter extends ArrayAdapter<Patient>{
+        Context mContext;
+        int layoutResourceID;
+        ArrayList<Patient> data = new ArrayList<Patient>();
+
+        // Adapter Constructor
+        public DisplayPatientAdapter(Context mContext, int layoutResourceID, ArrayList<Patient> data) {
+            super(mContext, layoutResourceID, data);
+
+            this.mContext = mContext;
+            this.layoutResourceID = layoutResourceID;
+            this.data = data;
+        }
+
+        public void AddPatient(Patient p)
+        {
+            data.add(0,p);
+            notifyDataSetChanged();
+        }
+
+        public void RemovePatient(Patient p)
+        {
+            try {
+                data.remove(p);
+                notifyDataSetChanged();
+
+                if(Constants.CurrentPat.equals(p)) { //TODO: should override .equals
+                    mDrawerListView.setSelection(0);
+                    mDrawerListView.performItemClick(mDrawerListView.getChildAt(0), 0, listAdapter.getItemId(0));
+                }
+            }
+            catch (Exception e)
+            {
+                Log.v(TAG,"SDFDSGFDGFD Error removing patient");
+                return;
+            }
+        }
+
+        public void updateDisplay(ArrayList<Patient> update)
+        {
+            data.clear();
+            for(int i=0;i<update.size();i++){
+                data.add(update.get(i));
+            }
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public View getView(int position, View child, ViewGroup parent) {
+            TextView pat;
+            Button del;
+            if (child == null) {
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                child = inflater.inflate(layoutResourceID, parent, false);
+            }
+
+            pat = (TextView) child.findViewById(R.id.title);
+            del = (Button) child.findViewById(R.id.delPat);
+            Patient p = data.get(position);
+            pat.setTag(p);
+            del.setTag(p);
+            pat.setText(p.getDemo().createFullNameGenerator());
+
+            del.setOnClickListener(NavigationDrawerFragment.this);
+
+            return child;
+        }
+
+
     }
 }

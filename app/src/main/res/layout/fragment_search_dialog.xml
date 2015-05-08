@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="horizontal"
     tools:context="com.imoandroid.imoandroidapp.SearchDialogFragment">
 
@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:gravity="right"
+                android:gravity="center"
                 android:text="Search"
                 android:textSize="17sp"
                 android:textColor="@color/white"
@@ -105,7 +105,7 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="50dip"
-                android:background="@color/imo_back"
+                android:background="@color/imo_background_color"
                 >
                 <TextView
                     android:layout_width="wrap_content"
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-                    android:background="@color/imo_back"
+                    android:background="@android:color/transparent"
                     android:padding="10dp"/>
                 </RelativeLayout>
 
@@ -131,11 +131,12 @@
                 android:layout_height="wrap_content"
                 android:text="Selected Terms:"
                 android:textColor="#000"
-                android:layout_margin="5dip"
+                android:layout_marginTop="10dp"
+                android:layout_margin="4dp"
                 android:textSize="17sp"
                 android:paddingLeft="10dip"/>
             <ListView
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="150dip"
                 android:id="@+id/lvChart"
                 android:layout_margin="10dip"></ListView>
@@ -147,6 +148,7 @@
                 android:layout_marginRight="40dp"
                 android:text="Save Chart"
                 android:textSize="15sp"
+                android:background="@color/gray"
                 android:textColor="@color/white"
                 android:paddingLeft="5dip"
                 android:paddingRight="5dip"/>
@@ -159,7 +161,7 @@
             <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
-                android:background="@color/imo_back"
+                android:background="@color/imo_background_color"
                 android:id="@+id/deetsBar">
                 <TextView
                     android:id="@+id/tdLabel"
@@ -176,6 +178,7 @@
                     android:id="@+id/bViewChart"
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
+                    android:background="@color/gray"
                     android:layout_alignParentRight="true"
                     android:layout_alignBottom="@+id/tdLabel"
                     android:layout_marginRight="12dp"
